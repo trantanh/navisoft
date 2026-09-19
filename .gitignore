@@ -1,14 +1,42 @@
-# Gradle and generated build output
-.gradle/
+# Gradle caches and generated build output (root and all modules)
+**/.gradle/
 **/build/
 **/out/
+**/bin/
+**/target/
+**/generated/
+*.class
 
-# IDE metadata
-.idea/
+# IntelliJ IDEA
+**/.idea/
 *.iml
+*.ipr
+*.iws
 
-# Local runtime files
+# Eclipse
+**/.classpath
+**/.project
+**/.settings/
+
+# Visual Studio Code and NetBeans private state
+**/.vscode/
+**/nbproject/private/
+
+# Local runtime files, databases and JVM diagnostics
 *.log
+*.tmp
+*.temp
+*.db
+*.mv.db
+*.trace.db
+hs_err_pid*
+replay_pid*
+*.hprof
+
+# Local environment configuration
+.env
+.env.*
+!.env.example
 
 # Private certificates and keys
 *.key
@@ -18,5 +46,6 @@
 *.pk8
 
 # Operating-system metadata
-.DS_Store
-Thumbs.db
+**/.DS_Store
+**/Thumbs.db
+**/desktop.ini
