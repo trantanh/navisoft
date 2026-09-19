@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>NaviPOS – export portable aplikace pro Windows</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #f4f6f8;
+      --surface: #ffffff;
+      --surface-alt: #eef5ff;
+      --text: #17202a;
+      --muted: #52606d;
+      --border: #d8dee6;
+      --primary: #155eef;
+      --primary-dark: #0b3b91;
+      --success: #067647;
+      --warning-bg: #fff8e1;
+      --warning-border: #f4b740;
+      --danger-bg: #fff1f0;
+      --danger-border: #e5484d;
+      --code-bg: #101828;
+      --code-text: #f2f4f7;
+      --shadow: 0 8px 28px rgba(16, 24, 40, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font: 16px/1.65 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    header {
+      padding: 4rem 1.5rem 3rem;
+      color: #fff;
+      background: linear-gradient(135deg, #0b3b91, #155eef 62%, #53b1fd);
+    }
+
+    header > div, main, footer > div {
+      width: min(100%, 960px);
+      margin: 0 auto;
+    }
+
+    header p { max-width: 700px; margin-bottom: 0; color: #eaf2ff; }
+    h1 { margin: 0 0 1rem; font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1.12; }
+    h2 { margin-top: 0; color: var(--primary-dark); font-size: 1.65rem; }
+    h3 { margin-top: 2rem; font-size: 1.16rem; }
+    a { color: var(--primary); }
+
+    main { padding: 2rem 1.25rem 4rem; }
+
+    section {
+      margin: 1.25rem 0;
+      padding: 2rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    nav ul, .checklist { padding-left: 1.35rem; }
+    nav li, .checklist li { margin: 0.4rem 0; }
+    code { font-family: "Cascadia Code", Consolas, monospace; }
+
+    pre {
+      overflow-x: auto;
+      margin: 1rem 0;
+      padding: 1rem 1.1rem;
+      border-radius: 9px;
+      color: var(--code-text);
+      background: var(--code-bg);
+      font: 0.92rem/1.55 "Cascadia Code", Consolas, monospace;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .summary article {
+      padding: 1.1rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface-alt);
+    }
+
+    .summary strong { display: block; margin-bottom: 0.25rem; color: var(--primary-dark); }
+
+    .note, .warning, .important {
+      margin: 1.25rem 0;
+      padding: 1rem 1.15rem;
+      border-left: 5px solid var(--primary);
+      border-radius: 6px;
+      background: var(--surface-alt);
+    }
+
+    .warning { border-color: var(--warning-border); background: var(--warning-bg); }
+    .important { border-color: var(--danger-border); background: var(--danger-bg); }
+    .ok { color: var(--success); font-weight: 700; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.75rem; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+    th { background: var(--surface-alt); }
+
+    footer { padding: 1.5rem; color: var(--muted); background: var(--surface); border-top: 1px solid var(--border); }
+
+    @media (max-width: 640px) {
+      header { padding-top: 2.5rem; }
+      section { padding: 1.25rem; }
+      table { font-size: 0.9rem; }
+    }
+
+    @media print {
+      body { background: #fff; font-size: 11pt; }
+      header { padding: 1.5rem 0; color: #000; background: #fff; border-bottom: 2px solid #000; }
+      header p { color: #333; }
+      main { width: 100%; padding: 0; }
+      section { break-inside: avoid; margin: 1rem 0; padding: 1rem 0; box-shadow: none; border: 0; border-bottom: 1px solid #bbb; }
+      pre { white-space: pre-wrap; color: #000; background: #f3f3f3; border: 1px solid #ccc; }
+      a { color: #000; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Export NaviPOS pro Windows</h1>
+      <p>Postup vytvoření portable pokladního systému se zabudovaným Java runtime, který lze na cílovém počítači spustit bez instalace JDK nebo JRE.</p>
+    </div>
+  </header>
+
+  <main>
+    <section aria-labelledby="prehled">
+      <h2 id="prehled">Rychlý přehled</h2>
+      <div class="summary">
+        <article><strong>Počítač pro sestavení</strong>Windows 10/11, internet a přístup ke zdrojovému kódu.</article>
+        <article><strong>Výstup</strong>Složka s <code>NaviPOS.exe</code>, aplikací a vlastním Java runtime.</article>
+        <article><strong>Cílový počítač</strong>Nepotřebuje JDK ani JRE. Potřebuje přístup k MySQL a nakonfigurovanou tiskárnu.</article>
+      </div>
+      <div class="important"><strong>Důležité:</strong> Windows balíček musí být sestaven na Windows. Balíček vytvořený na macOS nebo Linuxu nelze použít jako Windows aplikaci.</div>
+    </section>
+
+    <section aria-labelledby="obsah">
+      <h2 id="obsah">Obsah dokumentace</h2>
+      <nav aria-label="Obsah dokumentace">
+        <ul>
+          <li><a href="#pozadavky">Požadavky pro sestavení</a></li>
+          <li><a href="#sestaveni">Sestavení aplikace</a></li>
+          <li><a href="#zip">Vytvoření distribučního ZIPu</a></li>
+          <li><a href="#konfigurace">Konfigurace databáze a EET</a></li>
+          <li><a href="#instalace">Předání a spuštění u zákazníka</a></li>
+          <li><a href="#overeni">Kontrola výsledku</a></li>
+          <li><a href="#problemy">Časté problémy</a></li>
+        </ul>
+      </nav>
+    </section>
+
+    <section aria-labelledby="pozadavky">
+      <h2 id="pozadavky">1. Požadavky pro sestavení</h2>
+      <table>
+        <thead><tr><th>Požadavek</th><th>Účel</th></tr></thead>
+        <tbody>
+          <tr><td>Windows 10 nebo Windows 11</td><td><code>jpackage</code> vytváří platformně závislý spouštěč.</td></tr>
+          <tr><td>Zdrojový kód NaviPOS</td><td>Repozitář musí obsahovat <code>gradlew.bat</code> a modul <code>navisoft</code>.</td></tr>
+          <tr><td>Internet při prvním sestavení</td><td>Gradle může stáhnout JDK 25, Gradle distribuci a knihovny.</td></tr>
+          <tr><td>JDK 25</td><td>Je potřeba pouze pro sestavení. Gradle toolchain jej může obstarat automaticky.</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><strong>Koncový uživatel JDK nepotřebuje.</strong> Výsledný adresář obsahuje vlastní Java runtime ve složce <code>runtime</code>.</div>
+    </section>
+
+    <section aria-labelledby="sestaveni">
+      <h2 id="sestaveni">2. Sestavení aplikace</h2>
+      <p>Otevřete PowerShell nebo Windows Terminal v kořenové složce repozitáře, kde se nachází soubor <code>gradlew.bat</code>.</p>
+
+      <h3>2.1 Kontrola zdrojového kódu</h3>
+      <pre>git status</pre>
+      <p>Před vydáním zkontrolujte, že sestavujete správnou větev a že v repozitáři nejsou nechtěné lokální změny.</p>
+
+      <h3>2.2 Testy a vytvoření portable obrazu</h3>
+      <pre>.\gradlew.bat clean :navisoft:test :navisoft:jpackage</pre>
+      <p>Úloha provede čisté sestavení, spustí testy a následně použije JDK nástroj <code>jpackage</code>.</p>
+
+      <h3>2.3 Výsledná struktura</h3>
+      <pre>navisoft\build\jpackage\NaviPOS\
+├── NaviPOS.exe
+├── app\
+│   ├── navisoft-11.0.0-SNAPSHOT-plain.jar
+│   └── ostatní knihovny .jar
+└── runtime\
+    └── zabudovaný Java runtime</pre>
+      <div class="warning"><strong>Nekopírujte pouze NaviPOS.exe.</strong> Ke spuštění jsou nutné také celé složky <code>app</code> a <code>runtime</code>.</div>
+    </section>
+
+    <section aria-labelledby="zip">
+      <h2 id="zip">3. Vytvoření distribučního ZIPu</h2>
+      <p>Po úspěšném sestavení vytvořte ZIP celé složky <code>NaviPOS</code>:</p>
+      <pre>Compress-Archive `
+  -Path .\navisoft\build\jpackage\NaviPOS `
+  -DestinationPath .\navisoft\build\jpackage\NaviPOS-windows-x64-11.0.0.zip `
+  -Force</pre>
+      <p>Doporučené pojmenování:</p>
+      <pre>NaviPOS-windows-x64-11.0.0.zip</pre>
+
+      <h3>3.1 Kontrolní součet</h3>
+      <p>Pro kontrolu neporušenosti vytvořte SHA-256:</p>
+      <pre>Get-FileHash `
+  .\navisoft\build\jpackage\NaviPOS-windows-x64-11.0.0.zip `
+  -Algorithm SHA256</pre>
+      <p>Výsledný hash uložte společně s vydaným ZIPem.</p>
+    </section>
+
+    <section aria-labelledby="konfigurace">
+      <h2 id="konfigurace">4. Konfigurace databáze a EET</h2>
+      <p>Portable balíček obsahuje aplikaci a Javu, nikoli MySQL server. Cílový počítač musí mít přístup k existující databázi NaviPOS.</p>
+
+      <h3>4.1 Proměnné prostředí</h3>
+      <p>Pro jednorázové testovací spuštění nastavte proměnné v PowerShellu:</p>
+      <pre>$env:NAVISOFT_DB_URL = "jdbc:mysql://localhost:3306/pricetags?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Europe/Prague"
+$env:NAVISOFT_DB_USERNAME = "navisoft"
+$env:NAVISOFT_DB_PASSWORD = "doplnit-bezpecne-heslo"
+$env:NAVISOFT_FLYWAY_ENABLED = "true"
+$env:NAVISOFT_CASHDESK_PIN = "doplnit-pin"
+
+.\navisoft\build\jpackage\NaviPOS\NaviPOS.exe</pre>
+      <p>Takto nastavené hodnoty platí jen pro aktuální okno PowerShellu.</p>
+
+      <h3>4.2 Volitelná konfigurace EET</h3>
+      <pre>$env:NAVISOFT_EET_ENVIRONMENT = "playground"
+$env:NAVISOFT_EET_CERTIFICATE_PATH = "C:\NaviPOS-data\certifikaty\eet.p12"
+$env:NAVISOFT_EET_CERTIFICATE_PASSWORD = "doplnit-bezpecne-heslo"</pre>
+      <div class="important"><strong>Bezpečnost:</strong> Nevkládejte databázové heslo, PIN ani heslo k certifikátu do zdrojového kódu nebo distribučního ZIPu. Produkční certifikát ukládejte mimo adresář aplikace s omezenými přístupovými právy.</div>
+
+      <h3>4.3 Databázové předpoklady</h3>
+      <ul>
+        <li>MySQL server je spuštěný a dostupný.</li>
+        <li>Databáze <code>pricetags</code> a její základní tabulky již existují.</li>
+        <li>Databázový uživatel má práva číst a zapisovat provozní data.</li>
+        <li>Při prvním spuštění má právo vytvořit Flyway tabulku a nové migrační objekty.</li>
+      </ul>
+      <div class="warning">Historický soubor <code>src/main/resources/sql/Database.sql</code> není kompletní instalační migrace pro prázdnou databázi. Nový počítač proto nelze připravit pouze spuštěním portable ZIPu.</div>
+    </section>
+
+    <section aria-labelledby="instalace">
+      <h2 id="instalace">5. Předání a spuštění u zákazníka</h2>
+      <ol>
+        <li>Předejte soubor <code>NaviPOS-windows-x64-11.0.0.zip</code>.</li>
+        <li>ZIP rozbalte například do <code>C:\NaviPOS</code>. Aplikaci nespouštějte přímo uvnitř ZIPu.</li>
+        <li>Nakonfigurujte databázové připojení a případně EET.</li>
+        <li>Připojte a ve Windows nastavte pokladní tiskárnu jako výchozí.</li>
+        <li>Spusťte <code>C:\NaviPOS\NaviPOS.exe</code>.</li>
+      </ol>
+      <p class="ok">Na cílovém počítači se neinstaluje JDK ani JRE.</p>
+    </section>
+
+    <section aria-labelledby="overeni">
+      <h2 id="overeni">6. Kontrola výsledku</h2>
+      <p>Finální balíček ověřte na čistém Windows počítači nebo virtuálním stroji bez nainstalované Javy.</p>
+      <ul class="checklist">
+        <li>ZIP lze bez chyby rozbalit.</li>
+        <li><code>NaviPOS.exe</code> se spustí bez systémového JDK/JRE.</li>
+        <li>Aplikace se připojí k nakonfigurované MySQL.</li>
+        <li>Funguje přihlášení a načtení produktů.</li>
+        <li>Lze vytvořit, uložit a znovu načíst účtenku.</li>
+        <li>Funguje tisk na cílové pokladní tiskárně a české znaky.</li>
+        <li>Záloha databáze funguje s nakonfigurovaným <code>mysqldump.exe</code>.</li>
+        <li>EET Playground funguje s testovacím certifikátem, pokud je EET používáno.</li>
+        <li>Aplikace se spustí i z cesty obsahující mezery a české znaky.</li>
+        <li>Při nedostupné databázi je chyba diagnostikovatelná.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="problemy">
+      <h2 id="problemy">7. Časté problémy</h2>
+      <table>
+        <thead><tr><th>Problém</th><th>Pravděpodobná příčina a řešení</th></tr></thead>
+        <tbody>
+          <tr><td><code>gradlew.bat</code> nelze spustit</td><td>Příkaz není spuštěn z kořene repozitáře nebo chybí právo spouštět soubor.</td></tr>
+          <tr><td>Gradle nemůže stáhnout JDK či knihovny</td><td>Zkontrolujte internet, proxy, firewall a přístup k Maven Central a Gradle službám.</td></tr>
+          <tr><td>Aplikace se nepřipojí k databázi</td><td>Ověřte URL, port 3306, uživatele, heslo, firewall a existenci databáze.</td></tr>
+          <tr><td>Po přesunu nefunguje aplikace</td><td>Byl přesunut pouze EXE. Přesuňte vždy celý adresář <code>NaviPOS</code>.</td></tr>
+          <tr><td>Nefunguje tisk</td><td>Ve Windows není výchozí tiskárna nebo chybí odpovídající ovladač.</td></tr>
+          <tr><td>Nefunguje záloha databáze</td><td>Aplikace potřebuje dostupný program <code>mysqldump.exe</code> a správně uloženou cestu.</td></tr>
+          <tr><td>Windows zobrazí bezpečnostní upozornění</td><td>Spouštěč není digitálně podepsaný. Pro zákaznickou distribuci použijte firemní code-signing certifikát.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section aria-labelledby="doporuceni">
+      <h2 id="doporuceni">8. Doporučení před produkčním vydáním</h2>
+      <ul>
+        <li>Automatizovat vytvoření Windows ZIPu přímo v Gradle.</li>
+        <li>Doplnit kvalitní Windows ikonu přes parametr <code>jpackage --icon</code>.</li>
+        <li>Vytvořit korektní Flyway migrace pro kompletní inicializaci nové databáze.</li>
+        <li>Nahradit relativní pracovní soubor <code>file.txt</code> bezpečným dočasným souborem.</li>
+        <li>Doplnit uživatelsky srozumitelnou chybu při nedostupné databázi nebo tiskárně.</li>
+        <li>Nastavit logování do stabilního adresáře, například <code>%LOCALAPPDATA%\NaviPOS\logs</code>.</li>
+        <li>Před distribucí podepsat Windows spouštěč a evidovat SHA-256 vydaného ZIPu.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <div>NaviPOS 11 · Dokumentace exportu pro Windows · Aktualizováno 19. 9. 2026</div>
+  </footer>
+</body>
+</html>
