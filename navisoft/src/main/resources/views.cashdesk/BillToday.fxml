@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/navipos.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trantanh.navipos.view.cashdesk.BillTodayController">
+   <children>
+      <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab text="Dnešní účtenky">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="billTable" editable="true" prefHeight="400.0" prefWidth="845.0" stylesheets="@../css/navipos.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <columns>
+                              <TableColumn fx:id="billIndexColumn" prefWidth="74.0" text="#" />
+                              <TableColumn fx:id="billNumberColumn" prefWidth="232.0" text="Číslo účtenky" />
+                              <TableColumn fx:id="billDateColumn" minWidth="2.0" prefWidth="187.0" text="Datum" />
+                              <TableColumn fx:id="billTimeColumn" prefWidth="129.0" text="Čas" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Neodeslané účtenky">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="eetTable" prefHeight="371.0" prefWidth="600.0" stylesheets="@../css/navipos.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="IndexColumn" prefWidth="44.0" text="#" />
+                            <TableColumn fx:id="eetNumberColumn" prefWidth="202.0" text="Číslo účtenky" />
+                              <TableColumn fx:id="eetDateColumn" prefWidth="99.0" text="Datum" />
+                              <TableColumn fx:id="eetTimeColumn" prefWidth="114.0" text="Čas" />
+                              <TableColumn fx:id="sendColumn" prefWidth="119.0" text="Odeslat" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

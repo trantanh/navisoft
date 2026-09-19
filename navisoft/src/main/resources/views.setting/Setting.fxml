@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1320.0" stylesheets="@../css/navipos.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trantanh.navipos.view.setting.SettingController">
+   <children>
+      <TabPane prefHeight="600.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab text="Osobní údaje">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <SplitPane dividerPositions="0.49224137931034484" prefHeight="493.0" prefWidth="1160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <GridPane prefHeight="492.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="470.0" minWidth="10.0" prefWidth="285.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="484.0" minWidth="10.0" prefWidth="415.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="570.0" text="Název obchod:" textFill="WHITE" GridPane.rowIndex="1" />
+                                          <Label alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="501.0" text="Jméno:" textFill="WHITE" GridPane.rowIndex="2" />
+                                          <Label alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="479.0" text="Příjmení:" textFill="WHITE" GridPane.rowIndex="3" />
+                                          <Label alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="523.0" text="PSČ:" textFill="WHITE" GridPane.rowIndex="5" />
+                                          <Label alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="475.0" text="Ulice:" textFill="WHITE" GridPane.rowIndex="4" />
+                                          <Label alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="501.0" text="IČO:" textFill="WHITE" GridPane.rowIndex="7" />
+                                          <Label alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="526.0" text="Město:" textFill="WHITE" GridPane.rowIndex="6" />
+                                          <Label alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="534.0" text="DIČ:" textFill="WHITE" GridPane.rowIndex="8" />
+                                          <TextField fx:id="shopTextField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <GridPane.margin>
+                                                <Insets left="20.0" right="20.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <TextField fx:id="fistnameTextField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets left="20.0" right="20.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <TextField fx:id="lastnameTextField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                             <GridPane.margin>
+                                                <Insets left="20.0" right="20.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <TextField fx:id="streetTextField" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                             <GridPane.margin>
+                                                <Insets left="20.0" right="20.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <TextField fx:id="postalcodeTextField" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                             <GridPane.margin>
+                                                <Insets left="20.0" right="20.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <TextField fx:id="cityTextField" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                             <GridPane.margin>
+                                                <Insets left="20.0" right="20.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <TextField fx:id="icoTextField" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                             <GridPane.margin>
+                                                <Insets left="20.0" right="20.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <TextField fx:id="dicTextField" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                             <GridPane.margin>
+                                                <Insets left="20.0" right="20.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <Button mnemonicParsing="false" onAction="#updatePerson" text="Změnit" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                                          <Label fx:id="personMessage" alignment="CENTER_RIGHT" prefHeight="39.0" prefWidth="482.0" />
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Nastavení EET">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <SplitPane dividerPositions="0.628448275862069" prefHeight="493.0" prefWidth="1160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <GridPane layoutX="14.0" layoutY="13.0" prefHeight="467.0" prefWidth="665.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="101.0" AnchorPane.topAnchor="13.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="420.0" minWidth="10.0" prefWidth="396.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="458.0" minWidth="10.0" prefWidth="397.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                          <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="17.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="48.0" minHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="41.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="33.0" minHeight="0.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="59.0" minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="82.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Button fx:id="openButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="479.0" text="Open" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                          <Label alignment="CENTER" prefHeight="64.0" prefWidth="364.0" text="DIČ" GridPane.rowIndex="1" />
+                                          <Label alignment="CENTER" prefHeight="39.0" prefWidth="402.0" text="PROVOZOVNA" GridPane.rowIndex="2" />
+                                          <Label alignment="CENTER" prefHeight="39.0" prefWidth="347.0" text="HESLO" GridPane.rowIndex="4" />
+                                          <Label alignment="CENTER" prefHeight="39.0" prefWidth="394.0" text="SOUBOR" GridPane.rowIndex="5" />
+                                          <Label alignment="CENTER" prefHeight="39.0" prefWidth="466.0" text="PLATNOST Certifkat do" GridPane.rowIndex="7" />
+                                          <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="338.0" text="Uložit" GridPane.rowIndex="11">
+                                             <GridPane.margin>
+                                                <Insets left="10.0" right="10.0" />
+                                             </GridPane.margin></Button>
+                                          <Button fx:id="deleteButton" mnemonicParsing="false" text="Odstranit" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                                          <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                          <Label fx:id="validityLabel" alignment="CENTER" prefHeight="51.0" prefWidth="365.0" text="12.12.2016" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                          <TextField fx:id="storeTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <TextField fx:id="dicEetTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Label alignment="CENTER" prefHeight="39.0" prefWidth="395.0" text="Pokladna" GridPane.rowIndex="3" />
+                                          <TextField fx:id="cashTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                          <Label alignment="CENTER" prefHeight="39.0" prefWidth="383.0" text="DPH" GridPane.rowIndex="6" />
+                                          <Button fx:id="taxButton" mnemonicParsing="false" onAction="#taxButton" prefHeight="35.0" prefWidth="496.0" text="Ano" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                          <Label alignment="CENTER" prefHeight="39.0" prefWidth="368.0" text="Prostředí EET" GridPane.rowIndex="10" />
+                                          <Label alignment="CENTER" prefHeight="39.0" prefWidth="360.0" text="Pořadi číslo účtenek" GridPane.rowIndex="9" />
+                                          <TextField fx:id="porad_cisTextField" prefHeight="53.0" prefWidth="345.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                                          <Button fx:id="eetButton" mnemonicParsing="false" onAction="#eetButton" prefHeight="35.0" prefWidth="497.0" text="EET 2" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                          <Button fx:id="typeButton" mnemonicParsing="false" onAction="#typeButton" prefHeight="35.0" prefWidth="465.0" text="PRODUCTION" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </padding>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="490.0" prefWidth="431.0">
+                                 <children>
+                                    <Label alignment="CENTER" layoutX="7.0" layoutY="61.0" prefHeight="39.0" prefWidth="409.0" text="ELEKTRONICKÁ EVIDENCE TRŽEB" />
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Uživatele">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <SplitPane dividerPositions="0.4875" prefHeight="533.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <Pane layoutX="-2.0" layoutY="2.0" prefHeight="50.0" prefWidth="585.0">
+                                       <children>
+                                          <Label fx:id="informationLabel" layoutX="108.0" layoutY="3.0" prefHeight="41.0" prefWidth="349.0" />
+                                       </children>
+                                    </Pane>
+                                    <TableView fx:id="userTable" layoutX="6.0" layoutY="53.0" prefHeight="464.0" prefWidth="564.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="53.0">
+                                      <columns>
+                                        <TableColumn fx:id="indexColumn" prefWidth="75.0" text="#" />
+                                        <TableColumn fx:id="loginColumn" prefWidth="151.0" text="Uživatel" />
+                                          <TableColumn fx:id="roleColumn" prefWidth="105.0" text="Role" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <GridPane layoutX="14.0" layoutY="6.0" prefHeight="299.0" prefWidth="530.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label alignment="CENTER_RIGHT" prefHeight="145.0" prefWidth="321.0" text="Login:" />
+                                          <Label alignment="CENTER_RIGHT" prefHeight="209.0" prefWidth="404.0" text="Heslo:" GridPane.rowIndex="1" />
+                                          <Label alignment="CENTER_RIGHT" prefHeight="143.0" prefWidth="485.0" text="Role:" GridPane.rowIndex="3" />
+                                          <TextField fx:id="loginTextField" GridPane.columnIndex="1">
+                                             <GridPane.margin>
+                                                <Insets left="10.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <Button mnemonicParsing="false" onAction="#addUser" text="přidat uživatel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                          <Label fx:id="flashMessage" prefHeight="50.0" prefWidth="291.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                             <GridPane.margin>
+                                                <Insets left="10.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <ChoiceBox fx:id="roleChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                             <GridPane.margin>
+                                                <Insets left="10.0" />
+                                             </GridPane.margin>
+                                          </ChoiceBox>
+                                          <Label alignment="CENTER_RIGHT" prefHeight="57.0" prefWidth="360.0" text="Potvrzení hesla:" GridPane.rowIndex="2" />
+                                          <PasswordField fx:id="passwordTextField2" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets left="10.0" />
+                                             </GridPane.margin>
+                                          </PasswordField>
+                                          <PasswordField fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <GridPane.margin>
+                                                <Insets left="10.0" />
+                                             </GridPane.margin>
+                                          </PasswordField>
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Tiskárna">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="61.0" layoutY="37.0" prefHeight="39.0" prefWidth="143.0" text="Tiskárna" />
+                        <Button fx:id="printerButton" layoutX="61.0" layoutY="109.0" mnemonicParsing="false" onAction="#printerButton" prefHeight="35.0" prefWidth="151.0" text="Tiskarna vypnuta" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Data">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <SplitPane dividerPositions="0.49224137931034484" prefHeight="493.0" prefWidth="1160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <GridPane prefHeight="159.0" prefWidth="56.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="86.0" prefWidth="238.0" text="Data" />
+                                          <Label alignment="CENTER" prefHeight="100.0" prefWidth="238.0" text="Cíl" GridPane.rowIndex="1" />
+                                          <Button mnemonicParsing="false" onAction="#dataButton" prefHeight="35.0" prefWidth="276.0" text="Uložit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <Button fx:id="mysqlButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="265.0" text="Mysql" GridPane.columnIndex="1" />
+                                          <Button fx:id="fileButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="273.0" text="File" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </TabPane>
+   </children>
+</AnchorPane>

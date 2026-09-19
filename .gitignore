@@ -1,0 +1,22 @@
+# Gradle and generated build output
+.gradle/
+**/build/
+**/out/
+
+# IDE metadata
+.idea/
+*.iml
+
+# Local runtime files
+*.log
+
+# Private certificates and keys
+*.key
+*.pem
+*.p12
+*.pfx
+*.pk8
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db

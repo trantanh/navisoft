@@ -1,0 +1,10 @@
+rootProject.name = 'navisoft'
+
+include 'openeet-lite'
+include 'navisoft'
+include 'navisoft-database'
+include 'navisoft-restaurant'
+include 'navisoft-root'
+include 'navisoft-printer'
+include 'navisoft-nails'
+

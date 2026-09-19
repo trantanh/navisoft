@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1320.0" styleClass="background" stylesheets="@../css/navipos.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trantanh.navipos.view.sales.SalesController">
+   <children>
+      <VBox alignment="CENTER" prefHeight="600.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <SplitPane dividerPositions="0.4232758620689655" prefHeight="494.0" prefWidth="1200.0">
+               <items>
+                  <AnchorPane prefHeight="493.0" prefWidth="522.0">
+                     <children>
+                        <GridPane alignment="CENTER" layoutX="-14.0" layoutY="40.0" prefHeight="381.0" prefWidth="498.0" AnchorPane.leftAnchor="10.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="235.0" minWidth="10.0" prefWidth="169.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="209.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="272.0" minWidth="10.0" prefWidth="125.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="313.0" minHeight="10.0" prefHeight="76.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="313.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="313.0" minHeight="0.0" prefHeight="55.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="313.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="313.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="313.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="281.0" minHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="300.0" minHeight="10.0" prefHeight="152.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label alignment="CENTER" prefHeight="157.0" prefWidth="388.0" text="Dnes" textFill="WHITE">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="todayLabel" alignment="CENTER" prefHeight="154.0" prefWidth="300.0" text="11.2.2015" textFill="WHITE" GridPane.columnIndex="1">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER" prefHeight="241.0" prefWidth="585.0" text="Celkem" textFill="WHITE" GridPane.rowIndex="6">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="todayPriceLabel" alignment="CENTER" contentDisplay="TOP" prefHeight="210.0" prefWidth="545.0" text="100000 Kč" textFill="#141414" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                 <font>
+                                    <Font size="29.0" />
+                                 </font>
+                              </Label>
+                              <Button mnemonicParsing="false" onAction="#updateCurrentPrice" text="Obnovit" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                              <Button mnemonicParsing="false" onAction="#printToday" prefHeight="35.0" prefWidth="205.0" text="Vytisknout" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                              <Label alignment="CENTER" prefHeight="39.0" prefWidth="177.0" text="21% DPH 1" GridPane.rowIndex="1" />
+                              <Label alignment="CENTER" prefHeight="39.0" prefWidth="219.0" text="Čistý obrat" GridPane.rowIndex="2" />
+                              <Label alignment="CENTER" prefHeight="39.0" prefWidth="176.0" text="12% DPH 2" GridPane.rowIndex="3" />
+                              <Label alignment="CENTER" prefHeight="39.0" prefWidth="192.0" text="Čistý obrat" GridPane.rowIndex="4" />
+                              <Label fx:id="dan1Label" alignment="CENTER" prefHeight="44.0" prefWidth="240.0" text="0.00 Kč" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label fx:id="zakl_dan1Label" alignment="CENTER" prefHeight="39.0" prefWidth="246.0" text="0.00 Kč" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label fx:id="dan2Label" alignment="CENTER" prefHeight="39.0" prefWidth="255.0" text="0.00 Kč" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label fx:id="zakl_dan2Label" alignment="CENTER" prefHeight="39.0" prefWidth="300.0" text="0.00 Kč" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label alignment="CENTER" prefHeight="39.0" prefWidth="192.0" text="Karta" GridPane.rowIndex="5" />
+                              <Label fx:id="totalPriceByCardLabel" alignment="CENTER" prefHeight="39.0" prefWidth="300.0" text="0.00 Kč" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="412.0" prefWidth="569.0">
+                     <children>
+                        <TabPane prefHeight="200.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <tabs>
+                              <Tab text="Tržby podle konkretního den">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <DatePicker fx:id="datePicker" layoutX="153.0" layoutY="72.0" />
+                                          <GridPane layoutX="19.0" layoutY="139.0" prefHeight="237.0" prefWidth="522.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <Label prefHeight="39.0" prefWidth="208.0" text="Dne" />
+                                                <Label fx:id="chooseDayLabel" alignment="CENTER" prefHeight="39.0" prefWidth="278.0" text="11.2.2015" GridPane.columnIndex="1" />
+                                                <Label prefHeight="39.0" prefWidth="198.0" text="21% DPH 1" GridPane.rowIndex="1" />
+                                                <Label prefHeight="39.0" prefWidth="219.0" text="Čistý obrat" GridPane.rowIndex="2" />
+                                                <Label fx:id="dan1ChooseDayLabel" alignment="CENTER" prefHeight="39.0" prefWidth="295.0" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label fx:id="zakl_dan1ChooseDayLabel" alignment="CENTER" prefHeight="39.0" prefWidth="309.0" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <Label prefHeight="39.0" prefWidth="204.0" text="15% DPH 2" GridPane.rowIndex="3" />
+                                                <Label fx:id="dan2ChooseDayLabel" alignment="CENTER" prefHeight="39.0" prefWidth="306.0" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                <Label prefHeight="39.0" prefWidth="185.0" text="Čistý obrat" GridPane.rowIndex="4" />
+                                                <Label fx:id="zakl_dan2ChooseDayLabel" alignment="CENTER" prefHeight="39.0" prefWidth="326.0" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                <Label prefHeight="39.0" prefWidth="204.0" text="Celkem" GridPane.rowIndex="5" />
+                                                <Label fx:id="totalPriceChooseDayLabel" alignment="CENTER" prefHeight="39.0" prefWidth="304.0" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                <Button mnemonicParsing="false" onAction="#printSalesDay" prefHeight="12.0" prefWidth="261.0" text="Vytisknout" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                      <Insets top="10.0" />
+                                                   </GridPane.margin>
+                                                </Button>
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
+                            <Tab text="Tržby podle intervalů">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <Label fx:id="totalPriceLabel" layoutX="262.0" layoutY="168.0" prefHeight="39.0" prefWidth="216.0" text="10000" />
+                                          <Label layoutX="345.0" layoutY="99.0" prefHeight="39.0" prefWidth="37.0" text="do" />
+                                          <Label layoutX="35.0" layoutY="108.0" text="Od" />
+                                          <Label layoutX="115.0" layoutY="153.0" prefHeight="69.0" prefWidth="104.0" text="Celkem" />
+                                          <DatePicker fx:id="toDatePicker" layoutX="401.0" layoutY="100.0" onAction="#getTotalPrice" prefHeight="37.0" prefWidth="216.0" />
+                                          <DatePicker fx:id="fromDatePicker" layoutX="97.0" layoutY="100.0" />
+                                          <Button layoutX="21.0" layoutY="273.0" mnemonicParsing="false" onAction="#goToStatistics" prefHeight="77.0" prefWidth="189.0" text="Komplet" />
+                                          <Button layoutX="426.0" layoutY="222.0" mnemonicParsing="false" onAction="#printingPrice" text="Vytisknout" />
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                            <Tab text="Tržby podle měsíců">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <ComboBox fx:id="monthComboBox" layoutX="39.0" layoutY="59.0" onAction="#getMonthPrice" prefWidth="150.0" />
+                                          <ComboBox fx:id="yearComboBox" layoutX="214.0" layoutY="59.0" onAction="#getMonthPrice" prefWidth="150.0" />
+                                          <Label fx:id="monthPriceLabel" layoutX="39.0" layoutY="116.0" prefHeight="59.0" prefWidth="228.0" />
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                          </tabs>
+                        </TabPane>
+                     </children>
+                  </AnchorPane>
+               </items>
+            </SplitPane>
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>

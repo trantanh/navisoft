@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'edu.sc.seis.gradle:launch4j:2.4.2'
+        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+    }
+}
+
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'edu.sc.seis.launch4j'
+apply plugin: 'javafx-gradle-plugin'
+apply plugin: 'idea'
+
+
+jar {
+    baseName = 'navisoft'
+    version = '1.1.1'
+    manifest {
+        attributes 'Implementation-Title': 'NaviSoft',
+                'Implementation-Version': version,
+                'Main-Class': 'com.trantanh.navipos.CashDeskApp'
+    }
+}
+mainClassName = 'com.trantanh.navipos.CashDeskApp'
+
+version '10.1.1'
+
+sourceCompatibility = 1.8
+
+
+
+
+jfx {
+    // minimal requirement for jfxJar-task
+     mainClass = 'com.trantanh.navipos.CashDeskApp'
+
+    // minimal requirement for jfxNative-task
+    vendor = 'Tran Tuan Anh'
+}
+
+launch4j {
+    mainClassName = 'com.trantanh.navipos.CashDeskApp'
+    outfile = 'NaviPOS.exe'
+    productName = 'NAVIPOST'
+    cmdLine = ''
+}
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+javadoc.options.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.21.Final'
+    compile('com.github.anastaciocintra:escpos-coffee:3.0.0')
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.23'
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+    // https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
+    implementation 'org.apache.pdfbox:pdfbox:2.0.24'
+    compile project(':openeet-lite')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testImplementation 'org.junit.platform:junit-platform-commons:1.5.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+}

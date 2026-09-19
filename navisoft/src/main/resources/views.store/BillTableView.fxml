@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1200.0" stylesheets="@../css/navipos.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trantanh.navipos.view.store.BillTableViewController">
+   <children>
+      <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="493.0" prefWidth="845.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <GridPane prefHeight="100.0" prefWidth="1284.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="39.0" prefWidth="569.0" text="Hledat účtenku" textFill="WHITE" GridPane.rowIndex="1">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="billFilterTextField" prefHeight="37.0" prefWidth="539.0" promptText="Zadejte číslo  účtenku" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <Label fx:id="billInformation" alignment="CENTER" prefHeight="43.0" prefWidth="631.0" />
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="946.0" minWidth="10.0" prefWidth="624.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="595.0" minWidth="10.0" prefWidth="556.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="43.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="34.0" minHeight="10.0" prefHeight="21.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0" />
+               </VBox.margin>
+            </GridPane>
+            <TableView fx:id="billTable" editable="true" prefHeight="487.0" prefWidth="1180.0">
+               <columns>
+                  <TableColumn fx:id="billIndexColumn" prefWidth="74.0" text="#" />
+                  <TableColumn fx:id="billNumberColumn" prefWidth="232.0" text="Číslo účtenky" />
+                  <TableColumn fx:id="billDateColumn" minWidth="2.0" prefWidth="165.0" text="Datum" />
+                  <TableColumn fx:id="billTimeColumn" prefWidth="132.0" text="Čas" />
+                  <TableColumn fx:id="totalPriceColumn" prefWidth="172.0" text="Celkem" />
+                  <TableColumn fx:id="fikColumn" prefWidth="372.0" text="FIK" />
+               </columns>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </VBox.margin>
+            </TableView>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
