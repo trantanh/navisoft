@@ -186,10 +186,13 @@ public class CashDeskController implements Initializable, ControlledScreen {
         billService = BillServiceImpl.getInstance();
         salesService = SalesServiceImpl.getInstance();
         eetSubmissionService = SpringContext.getBean(EetSubmissionService.class);
+        payTextField.managedProperty().bind(payTextField.visibleProperty());
+        valueFVTextField.managedProperty().bind(valueFVTextField.visibleProperty());
         payTextField.setVisible(false);
         configManager = new ConfigManager();
         valueFVTextField.setVisible(false);
         productTable.getItems().addAll(data);
+        productTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         productTable.setPlaceholder(new Label("Nejsou tu žádné položky"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -215,6 +218,7 @@ public class CashDeskController implements Initializable, ControlledScreen {
         } else {
             printerButton.setText(PRINTER_OFF);
         }
+        updatePrinterStyle();
         initFavoriteProducts();
 
     }
@@ -224,7 +228,7 @@ public class CashDeskController implements Initializable, ControlledScreen {
                 productButton3, productButton4,
                 productButton5, productButton6, productButton7, productButton8));
         List<Product> favoriteProducts = productService.favoriteProducts();
-        for (int i = 0; i < favoriteProducts.size(); i++) {
+        for (int i = 0; i < Math.min(favoriteProducts.size(), popularProducts.size()); i++) {
             Button button = popularProducts.get(i);
             Product product = favoriteProducts.get(i);
             button.setText(product.getName());
@@ -398,6 +402,17 @@ public class CashDeskController implements Initializable, ControlledScreen {
                 }
             });
         }
+    }
+
+    @FXML
+    private void startPayment() {
+        if (productTable.getItems().isEmpty()) {
+            AlertDialogUtils.getWarning("POZOR!", "Nelze zaplatit", "Položky jsou prázdné");
+            barcodeTextField.requestFocus();
+            return;
+        }
+        totalPriceLabel.setText(PriceUtils.priceMathRound(totalPriceLabel.getText()));
+        pay();
     }
 
     @Override
@@ -659,8 +674,8 @@ public class CashDeskController implements Initializable, ControlledScreen {
     private void informationAboutPay() {
         REFUNDANCE = false;
         PAY_BY_CARD = false;
-        redundanceButton.setStyle("");
-        payCardButton.setStyle("");
+        setActiveStyle(redundanceButton, "refund-active", false);
+        setActiveStyle(payCardButton, "card-active", false);
         AlertDialogUtils.getInformationWithTime("Platba", "Probíha zprácování platby", "Prosím vyčkejte ....", 1000);
         clearProduct();
     }
@@ -697,17 +712,17 @@ public class CashDeskController implements Initializable, ControlledScreen {
             printerButton.setText(PRINTER_ON);
             configManager.setPrinter("1");
         }
+        updatePrinterStyle();
     }
 
     @FXML
     public void redundance() {
         if (!REFUNDANCE) {
-            redundanceButton.setStyle("-fx-background-color:#ff0000");
             REFUNDANCE = true;
         } else {
-            redundanceButton.setStyle("");
             REFUNDANCE = false;
         }
+        setActiveStyle(redundanceButton, "refund-active", REFUNDANCE);
     }
 
     @FXML
@@ -719,13 +734,26 @@ public class CashDeskController implements Initializable, ControlledScreen {
     @FXML
     public void payCard() {
         if (!PAY_BY_CARD) {
-            payCardButton.setStyle("-fx-background-color:green");
             PAY_BY_CARD = true;
         } else {
-            payCardButton.setStyle("");
             PAY_BY_CARD = false;
         }
+        setActiveStyle(payCardButton, "card-active", PAY_BY_CARD);
         barcodeTextField.requestFocus();
+    }
+
+    private void updatePrinterStyle() {
+        setActiveStyle(printerButton, "printer-off", PRINTER_OFF.equals(printerButton.getText()));
+    }
+
+    private void setActiveStyle(Button button, String styleClass, boolean active) {
+        if (active) {
+            if (!button.getStyleClass().contains(styleClass)) {
+                button.getStyleClass().add(styleClass);
+            }
+        } else {
+            button.getStyleClass().remove(styleClass);
+        }
     }
 
     private int saveBill(String numberBill, Date date, String returnMoney, String totalPrice, String person, String acceptMoney, String FIK, String BKP, String PKP, int poradCis, String dan1, String zaklDan1, String dan2, String zaklDan2) {

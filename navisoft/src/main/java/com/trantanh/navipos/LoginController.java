@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -140,6 +141,7 @@ public class LoginController implements Initializable {
         VBox bp = new VBox();
         bp.getChildren().add(mainContainer.getScreen(MENU_BAR_ID));
         bp.getChildren().addAll(mainContainer);
+        VBox.setVgrow(mainContainer, Priority.ALWAYS);
         Scene scene = new Scene(bp);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode().equals(KeyCode.F1)) {
@@ -150,6 +152,8 @@ public class LoginController implements Initializable {
         primaryStage.getIcons().add(new Image(LoginController.class.getResourceAsStream("/icons/logo2.png")));
         primaryStage.setScene(scene);
         primaryStage.setTitle(TITLE);
+        primaryStage.setMinWidth(1100);
+        primaryStage.setMinHeight(760);
         primaryStage.show();
     }
 

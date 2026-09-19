@@ -3,218 +3,179 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="1320.0" stylesheets="@../css/navipos.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trantanh.navipos.view.cashdesk.CashDeskController">
-   <children>
-      <SplitPane dividerPositions="0.5141666666666667" prefHeight="600.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-               <children>
-                  <VBox alignment="CENTER" prefHeight="598.0" prefWidth="569.0" stylesheets="@../css/navipos.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <GridPane alignment="CENTER" prefHeight="187.0" prefWidth="625.0" styleClass="background">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="393.0" minWidth="10.0" prefWidth="191.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="626.0" minWidth="10.0" prefWidth="606.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <TextField fx:id="barcodeTextField" prefHeight="79.0" prefWidth="510.0" promptText="Zadejte čárový kód" styleClass="text-field-2" GridPane.columnIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="valueFVTextField" prefHeight="74.0" prefWidth="105.0" />
-                           </children>
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                           <VBox.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-                           </VBox.margin>
-                        </GridPane>
-                        <TableView fx:id="productTable" prefHeight="320.0" prefWidth="609.0" styleClass="tableview">
-                          <columns>
-                            <TableColumn fx:id="indexColumn" prefWidth="75.0" text="#" />
-                              <TableColumn fx:id="nameColumn" prefWidth="176.0" text="Název" />
-                              <TableColumn fx:id="quantityColumn" prefWidth="172.0" text="Množství" />
-                              <TableColumn fx:id="priceColumn" prefWidth="98.0" text="Cena" />
-                          </columns>
-                           <VBox.margin>
-                              <Insets left="10.0" right="10.0" />
-                           </VBox.margin>
+<AnchorPane fx:id="anchorPane" minHeight="650.0" minWidth="1080.0" prefHeight="760.0" prefWidth="1320.0"
+            styleClass="pos-shell" stylesheets="@../css/navipos.css"
+            xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.trantanh.navipos.view.cashdesk.CashDeskController">
+    <children>
+        <HBox spacing="18.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <children>
+                <VBox minWidth="620.0" spacing="14.0" styleClass="receipt-panel" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                    </padding>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="barcode-box">
+                            <children>
+                                <Label text="▥" styleClass="barcode-icon" />
+                                <TextField fx:id="barcodeTextField" promptText="Naskenujte nebo zadejte čárový kód"
+                                           styleClass="barcode-field" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="valueFVTextField" maxWidth="150.0" promptText="Cena"
+                                           styleClass="inline-price-field" />
+                                <Button mnemonicParsing="false" onAction="#showPriceProduct"
+                                        styleClass="icon-action" text="⌕" />
+                            </children>
+                        </HBox>
+
+                        <TableView fx:id="productTable" styleClass="receipt-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="indexColumn" maxWidth="54.0" minWidth="54.0" prefWidth="54.0" text="#" />
+                                <TableColumn fx:id="nameColumn" minWidth="240.0" prefWidth="360.0" text="Položka" />
+                                <TableColumn fx:id="quantityColumn" minWidth="130.0" prefWidth="150.0" text="Množství" />
+                                <TableColumn fx:id="priceColumn" minWidth="130.0" prefWidth="160.0" text="Cena" />
+                            </columns>
                         </TableView>
-                        <GridPane alignment="CENTER" prefHeight="338.0" prefWidth="625.0" styleClass="background">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="457.0" minWidth="10.0" prefWidth="227.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="397.0" minWidth="10.0" prefWidth="344.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="202.0" minWidth="10.0" prefWidth="49.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints maxHeight="55.0" minHeight="5.0" prefHeight="35.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="59.0" minHeight="7.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="84.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="118.0" minHeight="10.0" prefHeight="66.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label fx:id="totalLabelName" alignment="CENTER" prefHeight="45.0" prefWidth="572.0" text="Celkem" textFill="WHITE" GridPane.rowIndex="2">
-                                 <font>
-                                    <Font name="System Bold" size="20.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="itemsLabelName" alignment="CENTER" prefHeight="77.0" prefWidth="452.0" text="Počet položek" textFill="WHITE">
-                                 <font>
-                                    <Font name="System Bold" size="20.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="totalPriceLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="115.0" prefWidth="320.0" styleClass="totalprice-label" text="0.00" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                              <Label fx:id="itemsLabel" alignment="CENTER" prefHeight="66.0" prefWidth="311.0" text="0" textFill="WHITE" GridPane.columnIndex="1">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font></Label>
-                              <Label fx:id="returnMoneyLabelName" alignment="CENTER" prefHeight="197.0" prefWidth="506.0" text="Vráceno" textFill="WHITE" GridPane.rowIndex="3">
-                                 <font>
-                                    <Font name="System Bold" size="19.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="79.0" prefWidth="170.0" text="Kč" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                                 <font>
-                                    <Font size="30.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="currencyLabel" prefHeight="79.0" prefWidth="170.0" text="Kč" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3">
-                                 <font>
-                                    <Font size="30.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="returnMoneyLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="115.0" prefWidth="320.0" styleClass="totalprice-label" text="0.00" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <Label fx:id="payLabel" alignment="CENTER" prefHeight="81.0" prefWidth="542.0" text="Zaplatit" textFill="WHITE" GridPane.rowIndex="1">
-                                 <font>
-                                    <Font name="System Bold" size="21.0" />
-                                 </font>
-                              </Label>
-                              <TextField fx:id="payTextField" alignment="CENTER" prefHeight="47.0" prefWidth="244.0" styleClass="pay-text-field" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </GridPane.margin>
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font>
-                              </TextField>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" />
-                           </VBox.margin>
+
+                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="receipt-footer">
+                            <children>
+                                <Button fx:id="button_open_cash" mnemonicParsing="false" onAction="#openCashDriver"
+                                        styleClass="footer-action" text="＋  Otevřít pokladnu   F2" />
+                                <Button fx:id="button_get_product_price" mnemonicParsing="false" onAction="#showPriceProduct"
+                                        styleClass="footer-action" text="⌕  Zjistit cenu" />
+                                <Button fx:id="button_edit_product" mnemonicParsing="false" onAction="#updateProduct"
+                                        styleClass="footer-action" text="✎  Upravit zboží   F4" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox minWidth="410.0" prefWidth="500.0" spacing="14.0" HBox.hgrow="SOMETIMES">
+                    <children>
+                        <VBox spacing="12.0" styleClass="summary-card">
+                            <padding>
+                                <Insets bottom="18.0" left="20.0" right="20.0" top="18.0" />
+                            </padding>
+                            <children>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label text="Počet položek" styleClass="summary-caption" />
+                                        <Label fx:id="itemsLabel" alignment="CENTER_RIGHT" text="0"
+                                               styleClass="summary-count" HBox.hgrow="ALWAYS" />
+                                    </children>
+                                </HBox>
+                                <HBox alignment="BASELINE_LEFT">
+                                    <children>
+                                        <Label text="K úhradě" styleClass="amount-title" />
+                                        <Label fx:id="totalPriceLabel" alignment="CENTER_RIGHT" text="0.00"
+                                               styleClass="totalprice-label" HBox.hgrow="ALWAYS" />
+                                        <Label text=" Kč" styleClass="amount-currency" />
+                                    </children>
+                                </HBox>
+                                <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="payment-row">
+                                    <children>
+                                        <Label fx:id="payLabel" minWidth="105.0" text="Zaplaceno" styleClass="summary-caption" />
+                                        <TextField fx:id="payTextField" alignment="CENTER_RIGHT" promptText="0,00"
+                                                   styleClass="pay-text-field" HBox.hgrow="ALWAYS" />
+                                    </children>
+                                </HBox>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label fx:id="getMoneyLabel" text="Vrátit" styleClass="summary-caption" />
+                                        <Label fx:id="returnMoneyLabel" alignment="CENTER_RIGHT" text="0.00"
+                                               styleClass="return-amount" HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="currencyLabel" text=" Kč" styleClass="return-currency" />
+                                    </children>
+                                </HBox>
+                                <Button mnemonicParsing="false" onAction="#startPayment" maxWidth="1.7976931348623157E308"
+                                        styleClass="pay-button" text="▣   ZAPLATIT                         ENTER" />
+                            </children>
+                        </VBox>
+
+                        <GridPane hgap="10.0" vgap="10.0">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="25.0" />
+                                <ColumnConstraints percentWidth="25.0" />
+                                <ColumnConstraints percentWidth="25.0" />
+                                <ColumnConstraints percentWidth="25.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="76.0" prefHeight="82.0" />
+                                <RowConstraints minHeight="64.0" prefHeight="70.0" />
+                            </rowConstraints>
+                            <children>
+                                <Button fx:id="payCardButton" mnemonicParsing="false" onAction="#payCard"
+                                        maxWidth="1.7976931348623157E308" maxHeight="1.7976931348623157E308"
+                                        styleClass="quick-action" text="▰&#10;Platba kartou" />
+                                <Button fx:id="button_storno" mnemonicParsing="false" onAction="#stornoProduct"
+                                        maxWidth="1.7976931348623157E308" maxHeight="1.7976931348623157E308"
+                                        styleClass="quick-action,danger-action" text="⊘&#10;Storno   F3" GridPane.columnIndex="1" />
+                                <Button fx:id="button_bill" mnemonicParsing="false" onAction="#bill"
+                                        maxWidth="1.7976931348623157E308" maxHeight="1.7976931348623157E308"
+                                        styleClass="quick-action" text="▤&#10;Účtenky   F5" GridPane.columnIndex="2" />
+                                <Button mnemonicParsing="false" onAction="#goToPriceTags"
+                                        maxWidth="1.7976931348623157E308" maxHeight="1.7976931348623157E308"
+                                        styleClass="quick-action" text="◇&#10;Cenovky" GridPane.columnIndex="3" />
+                                <Button fx:id="printerButton" mnemonicParsing="false" onAction="#printerButton"
+                                        maxWidth="1.7976931348623157E308" maxHeight="1.7976931348623157E308"
+                                        styleClass="status-action" text="Tiskárna vypnuta" GridPane.rowIndex="1" GridPane.columnSpan="2" />
+                                <Button fx:id="redundanceButton" mnemonicParsing="false" onAction="#redundance"
+                                        maxWidth="1.7976931348623157E308" maxHeight="1.7976931348623157E308"
+                                        styleClass="secondary-action" text="↩  Refundace" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                <Button fx:id="button_return_product" mnemonicParsing="false" onAction="#returnProduct"
+                                        maxWidth="1.7976931348623157E308" maxHeight="1.7976931348623157E308"
+                                        styleClass="secondary-action" text="Vrátit zboží" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                            </children>
                         </GridPane>
-                     </children>
-                  </VBox>
-               </children>
-            </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="349.0">
-               <children>
-                  <VBox alignment="CENTER" prefHeight="599.0" prefWidth="563.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <Pane prefHeight="200.0" prefWidth="200.0">
-                           <children>
-                              <ToolBar prefHeight="108.0" prefWidth="617.0">
-                                <items>
-                                    <Button mnemonicParsing="false" onAction="#cashDesk" prefHeight="86.0" prefWidth="163.0" text="Rychla pokladna(F1)" />
-                                    <Button fx:id="printerButton" mnemonicParsing="false" onAction="#printerButton" prefHeight="85.0" prefWidth="137.0" text="Tiskarna vypnuta" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Button>
-                                    <Button fx:id="button_storno" mnemonicParsing="false" onAction="#stornoProduct" prefHeight="85.0" prefWidth="131.0" text="Storno(F3)" textFill="WHITE">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Button>
-                                    <Button fx:id="button_storno2" mnemonicParsing="false" onAction="#goToPriceTags" prefHeight="85.0" prefWidth="159.0" text="Vytisknout cenovky" textFill="WHITE">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Button>
-                                </items>
-                                 <opaqueInsets>
-                                    <Insets left="10.0" />
-                                 </opaqueInsets>
-                              </ToolBar>
-                              <ToolBar layoutY="121.0" prefHeight="67.0" prefWidth="617.0">
-                                <items>
-                                    <Button fx:id="button_edit_product" alignment="CENTER" mnemonicParsing="false" onAction="#updateProduct" prefHeight="84.0" prefWidth="162.0" text="Zboží (F4)" />
-                                    <Button fx:id="button_bill" mnemonicParsing="false" onAction="#bill" prefHeight="86.0" prefWidth="140.0" text="Účtenky(F5)" textFill="WHITE" />
-                                  <Button fx:id="redundanceButton" mnemonicParsing="false" onAction="#redundance" prefHeight="86.0" prefWidth="132.0" text="Refundance" />
-                                    <Button fx:id="payCardButton" mnemonicParsing="false" onAction="#payCard" prefHeight="85.0" prefWidth="159.0" text="Platba kartou" textFill="WHITE">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Button>
-                                </items>
-                              </ToolBar>
-                           </children>
-                        </Pane>
-                        <Pane prefHeight="327.0" prefWidth="559.0">
-                           <children>
-                              <ToolBar layoutY="40.0" prefHeight="105.0" prefWidth="617.0">
-                                 <items>
-                                    <Button fx:id="productButton" mnemonicParsing="false" prefHeight="86.0" prefWidth="141.0" text="Pecivo" />
-                                    <Button fx:id="productButton2" mnemonicParsing="false" prefHeight="85.0" prefWidth="151.0" text="Potraviny" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Button>
-                                    <Button fx:id="productButton3" mnemonicParsing="false" prefHeight="85.0" prefWidth="134.0" text="Alkohol" textFill="WHITE">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Button>
-                                    <Button fx:id="productButton4" mnemonicParsing="false" prefHeight="86.0" prefWidth="166.0" text="Cigarety" />
-                                 </items>
-                                 <opaqueInsets>
-                                    <Insets left="10.0" />
-                                 </opaqueInsets>
-                              </ToolBar>
-                              <ToolBar layoutY="164.0" prefHeight="105.0" prefWidth="617.0">
-                                 <items>
-                                    <Button fx:id="productButton5" mnemonicParsing="false" prefHeight="86.0" prefWidth="139.0" text="Ovoce" />
-                                    <Button fx:id="productButton6" mnemonicParsing="false" prefHeight="85.0" prefWidth="152.0" text="Zelenina" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Button>
-                                    <Button fx:id="productButton7" mnemonicParsing="false" prefHeight="85.0" prefWidth="131.0" text="Drogerie" textFill="WHITE">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Button>
-                                    <Button fx:id="productButton8" mnemonicParsing="false" prefHeight="86.0" prefWidth="166.0" text="Vratné lahve" />
-                                 </items>
-                                 <opaqueInsets>
-                                    <Insets left="10.0" />
-                                 </opaqueInsets>
-                              </ToolBar>
-                           </children></Pane>
-                     </children>
-                     <padding>
-                        <Insets left="10.0" right="10.0" />
-                     </padding>
-                  </VBox>
-               </children></AnchorPane>
-        </items>
-      </SplitPane>
-   </children>
+
+                        <Label text="OBLÍBENÉ POLOŽKY" styleClass="section-eyebrow" />
+                        <GridPane hgap="10.0" vgap="10.0" VBox.vgrow="ALWAYS">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="25.0" />
+                                <ColumnConstraints percentWidth="25.0" />
+                                <ColumnConstraints percentWidth="25.0" />
+                                <ColumnConstraints percentWidth="25.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints percentHeight="50.0" minHeight="82.0" />
+                                <RowConstraints percentHeight="50.0" minHeight="82.0" />
+                            </rowConstraints>
+                            <children>
+                                <Button fx:id="productButton" mnemonicParsing="false" maxWidth="1.7976931348623157E308"
+                                        maxHeight="1.7976931348623157E308" styleClass="favorite-button" text="Pečivo" />
+                                <Button fx:id="productButton2" mnemonicParsing="false" maxWidth="1.7976931348623157E308"
+                                        maxHeight="1.7976931348623157E308" styleClass="favorite-button" text="Potraviny" GridPane.columnIndex="1" />
+                                <Button fx:id="productButton3" mnemonicParsing="false" maxWidth="1.7976931348623157E308"
+                                        maxHeight="1.7976931348623157E308" styleClass="favorite-button" text="Nápoje" GridPane.columnIndex="2" />
+                                <Button fx:id="productButton4" mnemonicParsing="false" maxWidth="1.7976931348623157E308"
+                                        maxHeight="1.7976931348623157E308" styleClass="favorite-button" text="Ovoce a zelenina" GridPane.columnIndex="3" />
+                                <Button fx:id="productButton5" mnemonicParsing="false" maxWidth="1.7976931348623157E308"
+                                        maxHeight="1.7976931348623157E308" styleClass="favorite-button" text="Drogerie" GridPane.rowIndex="1" />
+                                <Button fx:id="productButton6" mnemonicParsing="false" maxWidth="1.7976931348623157E308"
+                                        maxHeight="1.7976931348623157E308" styleClass="favorite-button" text="Vratné obaly" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <Button fx:id="productButton7" mnemonicParsing="false" maxWidth="1.7976931348623157E308"
+                                        maxHeight="1.7976931348623157E308" styleClass="favorite-button" text="Tabák" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                <Button fx:id="productButton8" mnemonicParsing="false" maxWidth="1.7976931348623157E308"
+                                        maxHeight="1.7976931348623157E308" styleClass="favorite-button" text="Další" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                            </children>
+                        </GridPane>
+                        <Label fx:id="flashMessage" maxWidth="1.7976931348623157E308" styleClass="flash-message" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
 </AnchorPane>

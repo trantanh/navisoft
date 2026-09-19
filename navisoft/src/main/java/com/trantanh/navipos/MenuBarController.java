@@ -45,26 +45,38 @@ public class MenuBarController implements Initializable, ControlledScreen {
             storeButton.setVisible(false);
             settingButton.setVisible(false);
         }
+        setActiveButton(cashDeskButton);
     }
 
     @FXML
     private void goToCaskDesk(ActionEvent event) {
+        setActiveButton(cashDeskButton);
         myController.setScreen(CASH_DESK_ID);
     }
 
     @FXML
     private void goToStatistic() {
+        setActiveButton(statisticsButton);
         myController.setScreen(SALES_ID);
     }
 
     @FXML
     private void goToStore() {
+        setActiveButton(storeButton);
         myController.setScreen(STORE_ID);
     }
 
     @FXML
     private void goToSetting() {
+        setActiveButton(settingButton);
         myController.setScreen(SETTING_ID);
+    }
+
+    private void setActiveButton(Button activeButton) {
+        for (Button button : new Button[]{cashDeskButton, statisticsButton, storeButton, settingButton}) {
+            button.getStyleClass().remove("nav-button-active");
+        }
+        activeButton.getStyleClass().add("nav-button-active");
     }
 
     @Override

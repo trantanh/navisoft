@@ -7,8 +7,8 @@ public class NaviPOSConstants {
 
     public static final String PRODUCTION = "PRODUCTION";
     public static final String PLAYGROUND = "PLAYGROUND";
-    public static final String PRINTER_ON = "Tiskarna zapnuta";
-    public static final String PRINTER_OFF = "Tiskarna vypnuta";
+    public static final String PRINTER_ON = "●  Tiskárna připravena";
+    public static final String PRINTER_OFF = "●  Tiskárna vypnuta";
     public static final String MENU_BAR_ID = "menubar";
     public static final String MENU_BAR_FILE = "/views/MenuBar.fxml";
     public static final String CASH_DESK_ID = "cashdesk";
