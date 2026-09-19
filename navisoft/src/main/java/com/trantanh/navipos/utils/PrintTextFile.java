@@ -7,90 +7,78 @@ import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.Copies;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Sends receipt text and ESC/POS commands directly to the printer.
+ *
  * @author Tuan Anh, tran.t.anh@email.cz
  */
-public class PrintTextFile {
+public final class PrintTextFile {
 
-    public PrintTextFile() {
+    private static final Logger LOGGER = Logger.getLogger(PrintTextFile.class.getName());
+    private static final Charset PRINTER_CHARSET = Charset.forName("IBM852");
+    private static final byte[] INITIALIZE = {27, 64};
+    private static final byte[] SELECT_CP852 = {27, 116, 18};
+    private static final byte[] FEED_THREE_LINES = {27, 100, 3};
+    private static final byte[] CUT_PAPER = {27, 109, 0};
+    private static final byte[] OPEN_CASH_DRAWER = {27, 112, 48, 55, 121};
+
+    private PrintTextFile() {
+    }
+
+    public static void printReceipt(String receiptText) {
+        submit(receiptPayload(receiptText), true);
     }
 
     public static void openCashDriwer() {
-        DocPrintJob job = PrintServiceLookup.lookupDefaultPrintService().createPrintJob();
-        byte[] bytes = {27, 112, 48, 55, 121};
-        DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
-        Doc doc = new SimpleDoc(bytes, flavor, null);
-        try {
-            job.print(doc, null);
-        } catch (PrintException ex) {
-            Logger.getLogger(Class.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        submit(OPEN_CASH_DRAWER, false);
     }
 
     public static void cutPapir() {
-        try {
-            DocPrintJob job = PrintServiceLookup.lookupDefaultPrintService().createPrintJob();
-            byte[] bytes = {27, 109, 0};
-            DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
-            Doc doc = new SimpleDoc(bytes, flavor, null);
-            job.print(doc, null);
-        } catch (PrintException ex) {
-            Logger.getLogger(PrintTextFile.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        submit(CUT_PAPER, false);
     }
 
     public static void feedPaper() {
-        try {
-            DocPrintJob job = PrintServiceLookup.lookupDefaultPrintService().createPrintJob();
-            byte[] bytes = {27, 100, 3};
-            DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
-            Doc doc = new SimpleDoc(bytes, flavor, null);
-            job.print(doc, null);
-        } catch (PrintException ex) {
-            Logger.getLogger(PrintTextFile.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        submit(FEED_THREE_LINES, false);
     }
 
-    public static void print() {
+    static byte[] receiptPayload(String receiptText) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        output.writeBytes(INITIALIZE);
+        output.writeBytes(SELECT_CP852);
+        output.writeBytes(receiptText.getBytes(PRINTER_CHARSET));
+        output.writeBytes(FEED_THREE_LINES);
+        output.writeBytes(CUT_PAPER);
+        output.writeBytes(OPEN_CASH_DRAWER);
+        return output.toByteArray();
+    }
+
+    private static void submit(byte[] payload, boolean waitForCompletion) {
+        PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+        if (service == null) {
+            LOGGER.severe("Není nastavena výchozí tiskárna účtenek");
+            return;
+        }
+
+        DocPrintJob job = service.createPrintJob();
+        Doc doc = new SimpleDoc(payload, DocFlavor.BYTE_ARRAY.AUTOSENSE, null);
         try {
-            PrintService service = PrintServiceLookup.lookupDefaultPrintService();
-            FileInputStream in = new FileInputStream(new File("file.txt"));
-
-            PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
-            pras.add(new Copies(1));
-
-            DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
-            Doc doc = new SimpleDoc(in, flavor, null);
-
-            DocPrintJob job = service.createPrintJob();
-            PrintJobWatcher pjw = new PrintJobWatcher(job);
-            job.print(doc, pras);
-            pjw.waitForDone();
-            in.close();
-
-            // send FF to eject the page
-            InputStream ff = new ByteArrayInputStream("\f".getBytes());
-            Doc docff = new SimpleDoc(ff, flavor, null);
-            DocPrintJob jobff = service.createPrintJob();
-            pjw = new PrintJobWatcher(jobff);
-            jobff.print(docff, null);
-            pjw.waitForDone();
-        } catch (PrintException | IOException ex) {
-            Logger.getLogger(PrintTextFile.class.getName()).log(Level.SEVERE, null, ex);
+            if (waitForCompletion) {
+                PrintJobWatcher watcher = new PrintJobWatcher(job);
+                job.print(doc, null);
+                watcher.waitForDone();
+            } else {
+                job.print(doc, null);
+            }
+        } catch (PrintException exception) {
+            LOGGER.log(Level.SEVERE, "Tisková úloha selhala", exception);
         }
     }
 
@@ -98,30 +86,16 @@ public class PrintTextFile {
         FileOutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream("COM4 : Prolific PL2303GC USB Serial COM Port");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException exception) {
+            LOGGER.log(Level.SEVERE, "Nelze otevřít zákaznický displej", exception);
         }
         if (outputStream != null) {
-            PrintStream ps = new PrintStream(outputStream);
-            ps.flush();
-            ps.print("\f");
-            ps.print(line);
-            ps.print("\r\n");
-            ps.print(line2);
-            ps.close();
+            try (PrintStream printStream = new PrintStream(outputStream, true, PRINTER_CHARSET)) {
+                printStream.print("\f");
+                printStream.print(line);
+                printStream.print("\r\n");
+                printStream.print(line2);
+            }
         }
-    }
-
-    public static void main(String[] args) {
-
-        String productPrice = "129.00Kc";
-        String productName = "Bozkov Rum 0.5L";
-        if (productName.length() > 10) {
-            productName = productName.substring(0, 7) + "...";
-        }
-        System.out.println("Product price length:" + productPrice.length());
-        System.out.println("Product Name length : " + productName.length());
-        //  printToVFDCustomerDisplay("Bozkov Rum 0.5L 129.00Kc", "Celkem 130 Kc");
-        printToVFDCustomerDisplay(productName + productPrice, "Celkem 130 Kc");
     }
 }

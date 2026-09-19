@@ -100,10 +100,7 @@ public class PrinterFormImpl implements PrinterForm {
                 }
                 printerFile.getText("Pokladna:" + pokladna);
                 printerFile.getText("Poradove cislo uctenky: " + poradiCisel);
-                printerFile.closeFile();
             }
-            printerFile.readFile();
-            printerFile.closeFile();
             printFile();
 
         } catch (IOException ex) {
@@ -145,10 +142,7 @@ public class PrinterFormImpl implements PrinterForm {
                 }
                 printerFile.getText("Pokladna:" + pokladna);
                 printerFile.getText("Poradove cislo uctenky:" + this.poradiCisel);
-                printerFile.closeFile();
             }
-            printerFile.readFile();
-            printerFile.closeFile();
             printFile();
         } catch (IOException ex) {
             Logger.getLogger(PrinterFormImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,9 +164,6 @@ public class PrinterFormImpl implements PrinterForm {
         printerFile.getText("Karta :" + payByCard);
         printerFile.totalPrice(totalPrice);
         printerFile.getText("Dne: " + date);
-        printerFile.closeFile();
-        printerFile.readFile();
-        printerFile.closeFile();
         printFile();
     }
 
@@ -187,10 +178,7 @@ public class PrinterFormImpl implements PrinterForm {
     }
 
     public void printFile() {
-        PrintTextFile.print();
-        PrintTextFile.feedPaper();
-        PrintTextFile.cutPapir();
-        PrintTextFile.openCashDriwer();
+        PrintTextFile.printReceipt(printerFile.getContent());
     }
 
     public String getId() {
