@@ -1,5 +1,7 @@
 package com.trantanh.navipos.view.cashdesk;
 
+import com.trantanh.navipos.config.SpringContext;
+
 import com.trantanh.eet.table.Eet;
 import com.trantanh.eet.table.OfflineEET;
 import com.trantanh.navipos.model.Bill;
@@ -118,7 +120,7 @@ public class BillTodayController implements Initializable {
                 try {
                     String id_bill = billNumberColumn.getCellData(billTable.getSelectionModel().getSelectedIndex());
                     Stage stage = new Stage(StageStyle.UTILITY);
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views.store/BillDetail.fxml"));
+                    FXMLLoader fxmlLoader = SpringContext.fxmlLoader(getClass().getResource("/views.store/BillDetail.fxml"));
                     Parent root = fxmlLoader.load();
                     BillDetailController controller = fxmlLoader.<BillDetailController>getController();
                     controller.setBillNumber(billData.getId(id_bill));

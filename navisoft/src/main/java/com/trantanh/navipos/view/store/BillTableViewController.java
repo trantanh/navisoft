@@ -1,5 +1,7 @@
 package com.trantanh.navipos.view.store;
 
+import com.trantanh.navipos.config.SpringContext;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -106,7 +108,7 @@ public class BillTableViewController implements Initializable {
                 if (!id_bill.isEmpty()) {
                     try {
                         Stage stage = new Stage(StageStyle.UTILITY);
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views.store/BillDetail.fxml"));
+                        FXMLLoader fxmlLoader = SpringContext.fxmlLoader(getClass().getResource("/views.store/BillDetail.fxml"));
                         Parent root = (Parent) fxmlLoader.load();
                         BillDetailController controller = fxmlLoader.<BillDetailController>getController();
                         controller.setBillNumber(billData.getId(id_bill));

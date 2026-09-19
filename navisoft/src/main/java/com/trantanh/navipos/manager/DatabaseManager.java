@@ -1,74 +1,92 @@
 package com.trantanh.navipos.manager;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import com.trantanh.navipos.config.SpringContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.criteria.CriteriaQuery;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
- * @author Tran Tuan Anh, tran.t.anh@email.cz
- * 13.02.2021
+ * Compatibility adapter for the legacy DAO implementations.
+ *
+ * Entity manager creation and connection pooling are owned by Spring Boot.
+ * New persistence code should use Spring Data repositories directly; this
+ * adapter keeps the current application behaviour while the DAOs are migrated.
  */
 public class DatabaseManager<T> {
 
-    protected SessionFactory sessionFactory;
+    private EntityManagerFactory entityManagerFactory;
 
     public void setup() {
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .configure() // configures settings from hibernate.cfg.xml
-                .build();
+        entityManagerFactory = SpringContext.getBean(EntityManagerFactory.class);
+    }
+
+    /**
+     * The factory is shared and closed by Spring when the desktop app exits.
+     */
+    public void exit() {
+        // Lifecycle is managed by the Spring application context.
+    }
+
+    public void saveOrUpdate(T entity) {
+        executeInTransaction(entityManager -> entityManager.merge(entity));
+    }
+
+    public <R> R read(Class<R> type, int id) {
+        EntityManager entityManager = createEntityManager();
         try {
-            sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-        } catch (Exception ex) {
-            StandardServiceRegistryBuilder.destroy(registry);
+            return entityManager.find(type, id);
+        } finally {
+            entityManager.close();
         }
     }
 
-    public void exit() {
-        sessionFactory.close();
+    public void delete(T entity) {
+        executeInTransaction(entityManager -> {
+            T managed = entityManager.contains(entity) ? entity : entityManager.merge(entity);
+            entityManager.remove(managed);
+        });
     }
 
-    public void saveOrUpdate(T t) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.saveOrUpdate(t);
-        session.getTransaction().commit();
-        session.close();
+    public List<T> findAll(Class<T> type) {
+        EntityManager entityManager = createEntityManager();
+        try {
+            CriteriaQuery<T> query = entityManager.getCriteriaBuilder().createQuery(type);
+            query.select(query.from(type));
+            return entityManager.createQuery(query).getResultList();
+        } finally {
+            entityManager.close();
+        }
     }
 
-    public <T> T read(final Class<T> type, int id) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        T t = session.get(type, id);
-        session.close();
-        return t;
+    private EntityManager createEntityManager() {
+        if (entityManagerFactory == null) {
+            setup();
+        }
+        return entityManagerFactory.createEntityManager();
     }
 
-    public void delete(T t) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.delete(t);
-        session.getTransaction().commit();
-        session.close();
+    private void executeInTransaction(EntityManagerAction action) {
+        EntityManager entityManager = createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            action.execute(entityManager);
+            transaction.commit();
+        } catch (RuntimeException exception) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw exception;
+        } finally {
+            entityManager.close();
+        }
     }
 
-    public List<T> findAll(final Class<T> type) {
-        Session session = sessionFactory.openSession();
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<T> cq = cb.createQuery(type);
-        Root<T> rootEntry = cq.from(type);
-        CriteriaQuery<T> all = cq.select(rootEntry);
-        TypedQuery<T> allQuery = session.createQuery(all);
-        List list = allQuery.getResultList();
-        session.close();
-        return list;
+    @FunctionalInterface
+    private interface EntityManagerAction {
+        void execute(EntityManager entityManager);
     }
-
 }

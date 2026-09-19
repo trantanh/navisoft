@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,6 +17,12 @@ import java.util.ResourceBundle;
  * @author Tuan Anh, tran.t.anh@email.cz
  */
 public class LoginController implements Initializable {
+
+    private final String cashDeskPin;
+
+    public LoginController(@Value("${navisoft.cash-desk.pin:}") String cashDeskPin) {
+        this.cashDeskPin = cashDeskPin;
+    }
 
     @FXML
     private PasswordField passwordTextField;
@@ -36,11 +43,14 @@ public class LoginController implements Initializable {
 
     @FXML
     public void openCashDriver() {
-        if (!passwordTextField.getText().equals("1234")) {
-            flashMessageLabel.setText("Zadané heslo je špatně! Zadejte ");
+        if (cashDeskPin.isBlank()) {
+            flashMessageLabel.setText("Pokladní PIN není nakonfigurován");
+            flashMessageLabel.setTextFill(Color.rgb(210, 39, 30));
+        } else if (!passwordTextField.getText().equals(cashDeskPin)) {
+            flashMessageLabel.setText("Zadaný PIN je nesprávný");
             flashMessageLabel.setTextFill(Color.rgb(210, 39, 30));
         } else {
-            flashMessageLabel.setText("Zadal jste spravný heslo");
+            flashMessageLabel.setText("PIN je správný");
             flashMessageLabel.setTextFill(Color.rgb(21, 117, 84));
         }
         passwordTextField.clear();

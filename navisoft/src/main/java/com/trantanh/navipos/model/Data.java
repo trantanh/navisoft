@@ -2,12 +2,12 @@ package com.trantanh.navipos.model;
 
 import javafx.beans.property.SimpleStringProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 /**
  *
@@ -23,6 +23,10 @@ public class Data {
     private long id;
     private String pathFile;
     private String pathMySQl;
+
+    protected Data() {
+        // Required by JPA.
+    }
 
     public Data(String pathFile, String  pathMySQl) {
         this.pathFile = pathFile;

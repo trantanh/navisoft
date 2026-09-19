@@ -26,6 +26,11 @@ public class Product {
         this.priceWithoutTax = "";
     }
 
+    public Product(String name, String price, String barcode, String dph,
+                   String category, String quantity, String priceWithoutTax) {
+        this(0, name, price, barcode, dph, category, quantity, priceWithoutTax, "");
+    }
+
     public Product(int id, String name, String price, String barcode, String dph, String category, String quantity, String priceWithoutTax, String unit) {
         this.id = id;
         this.name = name;

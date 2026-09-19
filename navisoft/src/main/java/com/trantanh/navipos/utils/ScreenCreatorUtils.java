@@ -1,5 +1,6 @@
 package com.trantanh.navipos.utils;
 
+import com.trantanh.navipos.config.SpringContext;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,7 +21,8 @@ public final class ScreenCreatorUtils {
     public static void getScreen(String name, String title) {
         try {
             Stage stage = new Stage(StageStyle.UTILITY);
-            Parent root = FXMLLoader.load(ScreenCreatorUtils.class.getResource(name));
+            FXMLLoader loader = SpringContext.fxmlLoader(ScreenCreatorUtils.class.getResource(name));
+            Parent root = loader.load();
             Scene scene = new Scene(root);
             scene.getStylesheets().add(ScreenCreatorUtils.class.getResource("/css/navipos.css").toString());
             stage.setTitle(title);

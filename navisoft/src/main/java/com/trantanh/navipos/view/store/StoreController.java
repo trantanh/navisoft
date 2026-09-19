@@ -1,6 +1,5 @@
 package com.trantanh.navipos.view.store;
 
-import com.trantanh.database.Database;
 import com.trantanh.navipos.ControlledScreen;
 import com.trantanh.navipos.ScreensController;
 import com.trantanh.navipos.constants.DataScreen;
@@ -9,6 +8,7 @@ import com.trantanh.navipos.dao.impl.DataDaoImpl;
 import com.trantanh.navipos.model.Data;
 import com.trantanh.navipos.model.Product;
 import com.trantanh.navipos.service.CategoryService;
+import com.trantanh.navipos.service.DatabaseBackupService;
 import com.trantanh.navipos.service.ProductService;
 import com.trantanh.navipos.service.impl.CategoryServiceImpl;
 import com.trantanh.navipos.service.impl.ProductServiceImpl;
@@ -29,6 +29,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
@@ -38,6 +39,12 @@ import java.util.ResourceBundle;
  * @author Tran Tuan Anh, tran.t.anh@email.cz
  */
 public class StoreController implements Initializable, ControlledScreen {
+
+    private final DatabaseBackupService databaseBackupService;
+
+    public StoreController(DatabaseBackupService databaseBackupService) {
+        this.databaseBackupService = databaseBackupService;
+    }
 
     private DataDaoImpl dataDaoImpl;
 
@@ -288,6 +295,9 @@ public class StoreController implements Initializable, ControlledScreen {
     public void importData() {
         dataDaoImpl = new DataDaoImpl();
         Data databaseData = dataDaoImpl.getData();
-        Database.export(databaseData.getPathFile(), databaseData.getPathMySQl());
+        databaseBackupService.export(
+                Path.of(databaseData.getPathFile()),
+                Path.of(databaseData.getPathMySQl())
+        );
     }
 }

@@ -12,7 +12,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,7 +25,7 @@ import java.util.ResourceBundle;
  */
 public class PriceTagsController implements Initializable {
 
-    private final Logger logger = org.apache.log4j.Logger.getLogger(PriceTagsController.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(PriceTagsController.class);
     @FXML
     private TextField barcodeTextField;
 

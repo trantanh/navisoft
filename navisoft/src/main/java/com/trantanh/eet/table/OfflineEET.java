@@ -1,5 +1,7 @@
 package com.trantanh.eet.table;
 
+import com.trantanh.navipos.config.SpringContext;
+
 import com.trantanh.navipos.service.BillService;
 import com.trantanh.navipos.service.impl.BillServiceImpl;
 import com.trantanh.navipos.view.cashdesk.BillTodayController;
@@ -69,7 +71,7 @@ public class OfflineEET {
                     String id_bill = eetNumberColumn.getCellData(eetTable.getSelectionModel().getSelectedIndex());
 
                     Stage stage = new Stage(StageStyle.UTILITY);
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views.store/BillDetail.fxml"));
+                    FXMLLoader fxmlLoader = SpringContext.fxmlLoader(getClass().getResource("/views.store/BillDetail.fxml"));
                     Parent root = (Parent) fxmlLoader.load();
                     BillDetailController controller = fxmlLoader.<BillDetailController>getController();
                     controller.setBillNumber(billService.getId(id_bill));

@@ -7,7 +7,8 @@ import com.github.anastaciocintra.escpos.barcode.BarCode;
 import com.github.anastaciocintra.output.PrinterOutputStream;
 import com.trantanh.navipos.service.PrinterService;
 import javafx.print.Printer;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.print.PrintService;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.io.IOException;
  */
 public class PrinterServiceImpl implements PrinterService {
 
-    private final Logger logger = Logger.getLogger(PrinterServiceImpl.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(PrinterServiceImpl.class);
 
     @Override
     public void printPriceTag(String name, String price, String unit, String unitCount) {

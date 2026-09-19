@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: navisoft
+  main:
+    banner-mode: "off"
+    web-application-type: none
+  datasource:
+    url: ${NAVISOFT_DB_URL:jdbc:mysql://localhost:3306/pricetags?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Europe/Prague}
+    username: ${NAVISOFT_DB_USERNAME:navisoft}
+    password: ${NAVISOFT_DB_PASSWORD:}
+    hikari:
+      connection-timeout: 10000
+      # Legacy JDBC DAOs keep one connection for their lifetime. The pool can
+      # be reduced after their gradual replacement with Spring Data repositories.
+      maximum-pool-size: 20
+      minimum-idle: 1
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Europe/Prague
+  flyway:
+    enabled: ${NAVISOFT_FLYWAY_ENABLED:false}
+    baseline-on-migrate: true
+    baseline-version: 0
+
+logging:
+  level:
+    root: INFO
+    com.trantanh.navipos: INFO
+
+navisoft:
+  cash-desk:
+    pin: ${NAVISOFT_CASHDESK_PIN:}

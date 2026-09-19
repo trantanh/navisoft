@@ -1,5 +1,7 @@
 package com.trantanh.navipos.view.cashdesk;
 
+import com.trantanh.navipos.config.SpringContext;
+
 import com.trantanh.navipos.ControlledScreen;
 import com.trantanh.navipos.ScreensController;
 import com.trantanh.navipos.config.ConfigManager;
@@ -447,7 +449,7 @@ public class CashDeskController implements Initializable, ControlledScreen {
                     try {
                         // pridat parametr do jineho scenu
                         Stage stage = new Stage(StageStyle.UTILITY);
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(ADD_PRODUCT));
+                        FXMLLoader fxmlLoader = SpringContext.fxmlLoader(getClass().getResource(ADD_PRODUCT));
                         Parent root = fxmlLoader.load();
                         root.getStylesheets().add(CashDeskController.class.getResource("/css/navipos.css").toString());
                         AddProductDialogController controller = fxmlLoader.getController();

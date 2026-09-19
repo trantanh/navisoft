@@ -17,8 +17,8 @@
 
 ## Java a architektura
 
-- Zachovej kompatibilitu s Java 8, dokud uživatel výslovně neschválí upgrade.
-- Respektuj vícemodulovou Gradle strukturu a stávající hranice modulů.
+- Cílová platforma projektu je JDK 25; nepřidávej zpět kompatibilitu s Java 8 ani staré `javax.*` API.
+- Produkční aplikace zůstává v jediném Gradle modulu `navisoft`; nový modul přidávej jen s jasným architektonickým důvodem.
 - Dodržuj zavedené balíčky, názvosloví a architektonický styl, pokud jejich změna není součástí úkolu.
 - Preferuj čitelný, jednoduchý a testovatelný kód; používej malé metody, jasné názvy a explicitní práci s chybami.
 - Odděluj prezentační logiku JavaFX controllerů od business logiky a perzistence.

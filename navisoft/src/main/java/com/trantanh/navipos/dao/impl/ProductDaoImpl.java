@@ -1,6 +1,6 @@
 package com.trantanh.navipos.dao.impl;
 
-import com.mysql.jdbc.Connection;
+import java.sql.Connection;
 import com.trantanh.navipos.dao.ProductDao;
 import com.trantanh.navipos.model.DatabaseConnector;
 import com.trantanh.navipos.model.Product;

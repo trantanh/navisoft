@@ -1,73 +1,57 @@
 package com.trantanh.navipos.dao.impl;
 
+import com.trantanh.navipos.config.SpringContext;
 import com.trantanh.navipos.dao.UserDao;
-import com.trantanh.navipos.manager.DatabaseManager;
 import com.trantanh.navipos.model.User;
+import com.trantanh.navipos.repository.UserRepository;
 
 import java.util.List;
 
 /**
- * @author Tuan Anh, tran.t.anh@email.cz
+ * Legacy DAO facade backed by Spring Data JPA.
+ *
+ * UI callers can keep the existing UserDao contract while persistence is
+ * managed by Spring. The facade can be removed once callers inject the
+ * repository or a dedicated user service directly.
  */
-public class UserDaoImpl implements com.trantanh.navipos.dao.UserDao {
+public class UserDaoImpl implements UserDao {
 
-    private DatabaseManager<User> databaseManager;
-    private final static String ROLE = "uživatel";
+    private static final String DEFAULT_ROLE = "uživatel";
+
+    private final UserRepository userRepository;
 
     public UserDaoImpl() {
-        databaseManager = new DatabaseManager<>();
+        this(SpringContext.getBean(UserRepository.class));
+    }
+
+    UserDaoImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public String getRole(String user) {
-        databaseManager.setup();
-        List<User> userList = databaseManager.findAll(User.class);
-        databaseManager.exit();
-        for (User userModel : userList) {
-            if (userModel.getLogin().equals(user)) {
-                return userModel.getRole();
-            }
-        }
-        return ROLE;
+    public String getRole(String login) {
+        return userRepository.findFirstByLogin(login)
+                .map(User::getRole)
+                .orElse(DEFAULT_ROLE);
     }
 
     @Override
     public boolean findUser(String login) {
-        databaseManager.setup();
-        List<User> userList = databaseManager.findAll(User.class);
-        databaseManager.exit();
-        for (User user : userList) {
-            if (user.getLogin().equals(login)) {
-                return true;
-            }
-        }
-        return false;
+        return userRepository.existsByLogin(login);
     }
 
     @Override
     public List<User> findAll() {
-        databaseManager.setup();
-        List<User> userList = databaseManager.findAll(User.class);
-        databaseManager.exit();
-        return userList;
+        return userRepository.findAll();
     }
 
     @Override
     public void add(User user) {
-        databaseManager.setup();
-        databaseManager.saveOrUpdate(user);
-        databaseManager.exit();
+        userRepository.save(user);
     }
 
     @Override
     public void delete(String login) {
-        databaseManager.setup();
-        List<User> userList = databaseManager.findAll(User.class);
-        for(User user:userList){
-            if(login.equals(user.getLogin())){
-                databaseManager.delete(user);
-            }
-        }
-        databaseManager.exit();
+        userRepository.deleteAllByLogin(login);
     }
 }

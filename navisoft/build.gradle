@@ -1,74 +1,141 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath 'edu.sc.seis.gradle:launch4j:2.4.2'
-        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
-    }
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '4.1.1'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
+group = 'com.trantanh.navisoft'
+version = '11.0.0-SNAPSHOT'
 
-apply plugin: 'java'
-apply plugin: 'application'
-apply plugin: 'edu.sc.seis.launch4j'
-apply plugin: 'javafx-gradle-plugin'
-apply plugin: 'idea'
-
-
-jar {
-    baseName = 'navisoft'
-    version = '1.1.1'
-    manifest {
-        attributes 'Implementation-Title': 'NaviSoft',
-                'Implementation-Version': version,
-                'Main-Class': 'com.trantanh.navipos.CashDeskApp'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
-mainClassName = 'com.trantanh.navipos.CashDeskApp'
 
-version '10.1.1'
-
-sourceCompatibility = 1.8
-
-
-
-
-jfx {
-    // minimal requirement for jfxJar-task
-     mainClass = 'com.trantanh.navipos.CashDeskApp'
-
-    // minimal requirement for jfxNative-task
-    vendor = 'Tran Tuan Anh'
+application {
+    mainClass = 'com.trantanh.navipos.CashDeskApp'
+    applicationDefaultJvmArgs = ['-Dfile.encoding=UTF-8']
 }
 
-launch4j {
-    mainClassName = 'com.trantanh.navipos.CashDeskApp'
-    outfile = 'NaviPOS.exe'
-    productName = 'NAVIPOST'
-    cmdLine = ''
+javafx {
+    version = '25.0.4'
+    modules = [
+            'javafx.controls',
+            'javafx.fxml',
+            'javafx.media'
+    ]
 }
-
-compileJava.options.encoding = 'UTF-8'
-compileTestJava.options.encoding = 'UTF-8'
-javadoc.options.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.21.Final'
-    compile('com.github.anastaciocintra:escpos-coffee:3.0.0')
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.23'
-    compile group: 'log4j', name: 'log4j', version: '1.2.17'
-    // https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
-    implementation 'org.apache.pdfbox:pdfbox:2.0.24'
-    compile project(':openeet-lite')
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testImplementation 'org.junit.platform:junit-platform-commons:1.5.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    implementation platform('org.springframework.boot:spring-boot-dependencies:4.1.1')
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-flyway'
+    implementation 'com.github.anastaciocintra:escpos-coffee:3.0.0'
+
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'org.flywaydb:flyway-mysql'
+
+    testImplementation platform('org.springframework.boot:spring-boot-dependencies:4.1.1')
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'com.h2database:h2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs.add('-parameters')
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
+springBoot {
+    mainClass = application.mainClass
+}
+
+// A JavaFX desktop distribution needs its dependency jars next to the app.
+// installDist provides that layout; jpackage then adds a platform runtime.
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+    archiveBaseName = 'navisoft'
+    manifest {
+        attributes(
+                'Implementation-Title': 'NaviSoft',
+                'Implementation-Version': project.version,
+                'Main-Class': application.mainClass.get()
+        )
+    }
+}
+
+def installLibDir = layout.buildDirectory.dir("install/${project.name}/lib")
+def jpackageOutputDir = layout.buildDirectory.dir('jpackage')
+def jpackageStagingDir = new File(System.getProperty('java.io.tmpdir'), "navisoft-jpackage-${project.version}")
+def jpackageAppVersion = version.toString().replace('-SNAPSHOT', '')
+
+tasks.register('cleanJpackage', Delete) {
+    delete jpackageOutputDir, jpackageStagingDir
+}
+
+tasks.register('clearMacExtendedAttributes', Exec) {
+    dependsOn tasks.named('installDist')
+    onlyIf { System.getProperty('os.name').toLowerCase().contains('mac') }
+    commandLine 'xattr', '-cr', installLibDir.get().asFile
+}
+
+tasks.register('jpackageImage', Exec) {
+    dependsOn tasks.named('cleanJpackage'), tasks.named('clearMacExtendedAttributes')
+
+    doFirst {
+        def launcher = javaToolchains.launcherFor(java.toolchain).get()
+        commandLine(
+                launcher.metadata.installationPath.file('bin/jpackage').asFile,
+                '--type', 'app-image',
+                '--name', 'NaviPOS',
+                '--input', installLibDir.get().asFile,
+                '--main-jar', tasks.named('jar').get().archiveFileName.get(),
+                '--main-class', application.mainClass.get(),
+                '--dest', jpackageStagingDir,
+                '--app-version', jpackageAppVersion
+        )
+    }
+}
+
+def isMacOs = System.getProperty('os.name').toLowerCase().contains('mac')
+def copiedJpackageImage
+
+if (isMacOs) {
+    copiedJpackageImage = tasks.register('archiveJpackageImage', Exec) {
+        dependsOn tasks.named('jpackageImage')
+        doFirst {
+            jpackageOutputDir.get().asFile.mkdirs()
+            environment 'COPYFILE_DISABLE', '1'
+            commandLine 'ditto', '--norsrc', '-c', '-k', '--keepParent',
+                    new File(jpackageStagingDir, 'NaviPOS.app'),
+                    jpackageOutputDir.get().file('NaviPOS-mac.zip').asFile
+        }
+    }
+} else {
+    copiedJpackageImage = tasks.register('copyJpackageImage', Sync) {
+        dependsOn tasks.named('jpackageImage')
+        from jpackageStagingDir
+        into jpackageOutputDir
+    }
+}
+
+tasks.register('jpackage') {
+    group = 'distribution'
+    description = 'Creates a self-contained application image for the current platform.'
+    dependsOn copiedJpackageImage
 }

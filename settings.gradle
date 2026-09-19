@@ -1,10 +1,15 @@
-rootProject.name = 'navisoft'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
 
-include 'openeet-lite'
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = 'navisoft-workspace'
+
 include 'navisoft'
-include 'navisoft-database'
-include 'navisoft-restaurant'
-include 'navisoft-root'
-include 'navisoft-printer'
-include 'navisoft-nails'
 

@@ -8,7 +8,6 @@ import com.trantanh.navipos.service.ProductTax;
 import com.trantanh.navipos.service.impl.ProductServiceImpl;
 import com.trantanh.navipos.service.impl.ProductTaxImpl;
 import javafx.collections.ObservableList;
-import org.apache.log4j.Logger;
 
 /**
  * @author Tran Tuan Anh tran.t.anh@email.cz
@@ -23,14 +22,13 @@ public final class TaxUtils {
     }
 
     public static SalesDetail taxProduct(ObservableList<Product> data) {
-        ProductService productService = ProductServiceImpl.getInstance();
         double totalPriceForTax12 = 0.00;
         double totaPriceForTax21 = 0.00;
         for (Product product : data) {
             double price = Double.valueOf(product.getPrice());
-            Tax tax = productService.getTax(product.getBarcode());
+            String tax = resolveTax(product);
             if (price > 0) {
-                switch (tax.getTax()) {
+                switch (tax) {
                     case TAX12:
                         totalPriceForTax12 += price * Double.parseDouble(product.getQuantity());
                         break;
@@ -49,6 +47,16 @@ public final class TaxUtils {
         String zakl_dan2 = productTax12.getValueOfTax();
         String dan2 = productTax12.getBaseTax();
         return new SalesDetail(zakl_dan2, dan2, zakl_dan1, dan1);
+    }
+
+    private static String resolveTax(Product product) {
+        if (product.getDph() != null && !product.getDph().isBlank()) {
+            return product.getDph();
+        }
+
+        ProductService productService = ProductServiceImpl.getInstance();
+        Tax tax = productService.getTax(product.getBarcode());
+        return tax == null ? TAX21 : tax.getTax();
     }
 
     public static String negativeTax(String tax) {

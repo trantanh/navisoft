@@ -39,6 +39,7 @@
  */
 package com.trantanh.navipos;
 
+import com.trantanh.navipos.config.SpringContext;
 import java.util.HashMap;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -89,7 +90,7 @@ public class ScreensController extends StackPane {
     //finally injects the screenPane to the controller.
     public boolean loadScreen(String name, String resource) {
         try {
-            FXMLLoader myLoader = new FXMLLoader(getClass().getResource(resource));
+            FXMLLoader myLoader = SpringContext.fxmlLoader(getClass().getResource(resource));
             Parent loadScreen = (Parent) myLoader.load();
             ControlledScreen myScreenControler = ((ControlledScreen) myLoader.getController());
        

@@ -1,64 +1,44 @@
 package com.trantanh.navipos.model;
 
-import com.mysql.jdbc.Connection;
+import com.trantanh.navipos.config.SpringContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.sql.DriverManager;
+import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 
 /**
  * @author Tuan Anh, tran.t.anh@email.cz
  */
 public abstract class DatabaseConnector {
 
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseConnector.class);
+
     protected Connection connection;
     protected Statement statement;
     protected PreparedStatement preparedStatement;
     protected ResultSet resultSet;
-    private final String url = "jdbc:mysql://localhost/pricetags";
-    private final String user = "root";
-    private final String password = "";
+    private final DataSource dataSource;
 
     public DatabaseConnector() {
+        dataSource = SpringContext.getBean(DataSource.class);
         try {
-            connection = (Connection) DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
             statement = connection.createStatement();
         } catch (SQLException ex) {
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("Pozor!");
-            alert.setHeaderText("Nelze připojit se k databazi");
-            alert.setContentText("Zapnete databaze pomocí programu XAMPP poté spuste program znova");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                System.exit(0);
-            }
+            throw new IllegalStateException("Nelze se připojit k databázi NaviSoft", ex);
         }
     }
 
     protected Connection getDatabaseConnection() {
         try {
-            return (Connection) DriverManager.getConnection(url, user, password);
+            return dataSource.getConnection();
         } catch (SQLException e) {
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("Pozor!");
-            alert.setHeaderText("Nelze připojit se k databazi");
-            alert.setContentText("Zapnete databaze pomocí programu XAMPP poté spuste program znova");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent()) {
-                if (result.get() == ButtonType.OK) {
-                    System.exit(0);
-                }
-            }
-            throw new RuntimeException(e);
+            throw new IllegalStateException("Nelze se připojit k databázi NaviSoft", e);
         }
     }
 
@@ -66,7 +46,7 @@ public abstract class DatabaseConnector {
         try {
             return resultSet = statement.executeQuery(query);
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseConnector.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Database query failed", ex);
         }
         return null;
     }

@@ -16,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TaxUtilsTest {
 
     @Test
-    public void testTax15() {
-        ObservableList<Product> productObservableList = productTax15();
+    public void testTax12() {
+        ObservableList<Product> productObservableList = productTax12();
         SalesDetail salesDetail = TaxUtils.taxProduct(productObservableList);
         String zakl_dan2 = salesDetail.getZakl_dan2();
         String dan2 = salesDetail.getDan2();
         assertEquals("100.00", zakl_dan2);
-        assertEquals("15.00", dan2);
+        assertEquals("12.00", dan2);
     }
 
 
@@ -48,8 +48,8 @@ public class TaxUtilsTest {
         assertEquals("120.66", zakl_dan1);
         assertEquals("25.34", dan1);
 
-        assertEquals("371.30", zakl_dan2);
-        assertEquals("55.70", dan2);
+        assertEquals("381.25", zakl_dan2);
+        assertEquals("45.75", dan2);
     }
 
 
@@ -65,16 +65,16 @@ public class TaxUtilsTest {
 
     @Test
     public void testWithBottle(){
-        ObservableList<Product> productObservableList = productTax15WithBottle();
+        ObservableList<Product> productObservableList = productTax12WithBottle();
         SalesDetail salesDetail = TaxUtils.taxProduct(productObservableList);
         String zakl_dan2 = salesDetail.getZakl_dan2();
         String dan2 = salesDetail.getDan2();
         assertEquals("100.00", zakl_dan2);
-        assertEquals("15.00", dan2);
+        assertEquals("12.00", dan2);
     }
-    private ObservableList<Product> productTax15(){
+    private ObservableList<Product> productTax12(){
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
-        Product product = new Product("Jidlo", "115", "12345", "15", "Potraviny", "1", "");
+        Product product = new Product("Jidlo", "112", "12345", "12", "Potraviny", "1", "");
         productObservableList.add(product);
         return productObservableList;
     }
@@ -89,9 +89,9 @@ public class TaxUtilsTest {
 
     private ObservableList<Product> mixProductsTax() {
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
-        Product product = new Product("Potraviny", "427", "12345", "15", "Potraviny", "1","");
+        Product product = new Product("Potraviny", "427", "12345", "12", "Potraviny", "1","");
         Product product2 = new Product("Drogerie", "146", "12348", "21", "Drogerie", "1","");
-        Product product3 = new Product("Lahev", "-3", "12345", "15", "Potraviny", "1", "");
+        Product product3 = new Product("Lahev", "-3", "12345", "12", "Potraviny", "1", "");
         productObservableList.add(product);
         productObservableList.add(product2);
         productObservableList.add(product3);
@@ -107,10 +107,10 @@ public class TaxUtilsTest {
     }
 
 
-    private ObservableList<Product> productTax15WithBottle(){
+    private ObservableList<Product> productTax12WithBottle(){
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
-        Product product = new Product("Jidlo", "115", "12345", "15", "Potraviny", "1","");
-        Product product2 = new Product("Lahev", "-3", "12345", "15", "Potraviny", "1", "");
+        Product product = new Product("Jidlo", "112", "12345", "12", "Potraviny", "1","");
+        Product product2 = new Product("Lahev", "-3", "12345", "12", "Potraviny", "1", "");
         productObservableList.add(product);
         productObservableList.add(product2);
         return productObservableList;

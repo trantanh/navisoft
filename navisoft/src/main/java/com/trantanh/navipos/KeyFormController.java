@@ -1,5 +1,7 @@
 package com.trantanh.navipos;
 
+import com.trantanh.navipos.config.SpringContext;
+
 import com.trantanh.navipos.utils.LabelUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -87,7 +89,7 @@ public class KeyFormController implements Initializable {
             if (textField2.getText().length() == 36) {
                 LabelUtils.informationLabel(informationLabel, "Heslo je spravne", Color.GREEN);
                 Stage stage = new Stage();
-                Parent root = FXMLLoader.load(getClass().getResource("../../resources/views/Login.fxml"));
+                Parent root = SpringContext.fxmlLoader(getClass().getResource("/views/Login.fxml")).load();
                 Scene scene = new Scene(root);
                 stage.setTitle("Login");
                 stage.initModality(Modality.APPLICATION_MODAL);
