@@ -53,8 +53,10 @@ import static com.trantanh.navipos.constants.NaviPOSConstants.PRINTER_ON;
  */
 public class CashDeskController implements Initializable, ControlledScreen {
 
-    private final static int MAX_QUANTITY = 1000;
-    private final static double MAX_PRICE_PRODUCT = 10000;
+    private static final int MAX_QUANTITY = 1000;
+    private static final double MAX_PRICE_PRODUCT = 10000;
+    private static final String ZERO_AMOUNT = "0.00";
+    private static final String CONFIG_ENABLED = "1";
     private ScreensController myController;
 
     @FXML
@@ -144,10 +146,8 @@ public class CashDeskController implements Initializable, ControlledScreen {
 
     private final ObservableList<Product> data = FXCollections.observableArrayList();
 
-    private SalesDetail salesDetail;
-
-    private static boolean REFUNDANCE = false;
-    private static boolean PAY_BY_CARD = false;
+    private boolean refundActive;
+    private boolean payByCard;
 
     private EetSubmissionService eetSubmissionService;
 
@@ -156,8 +156,6 @@ public class CashDeskController implements Initializable, ControlledScreen {
     private SalesService salesService;
 
     private BillService billService;
-
-    private PrinterForm printerForm;
 
     private ProductService productService = ProductServiceImpl.getInstance();
 
@@ -580,100 +578,109 @@ public class CashDeskController implements Initializable, ControlledScreen {
     }
 
     private void saveBill() {
-        String billNumber = DateUtils.getBillId();
-        String namePerson = configManager.getLogin();
-        String printer = configManager.getPrinter();
-        int billId = 0;
-        if (!data.isEmpty()) {
-            if (configManager.getEet().equals("1")) {
-                String fik = "";
-                String bkp = "";
-                String pkp = "";
-                int porad_cis = billService.getPoradCisel();
-                porad_cis++;
-                Date dateTime = new Date();
-                double price = PriceUtils.totalPrice(data);
-                String priceFormat = DateUtils.format(price);
-                String printerDateFormat = DateUtils.billDateFormat(dateTime);
-                if (configManager.getTax().equals("1")) {
-                    salesDetail = TaxUtils.taxProduct(data);
-                    String zaklDan1 = salesDetail.getZakl_dan1();
-                    String dan1 = salesDetail.getDan1();
-                    String zaklDan2 = salesDetail.getZakl_dan2();
-                    String dan2 = salesDetail.getDan2();
-                    if (REFUNDANCE) {
-                        zaklDan1 = TaxUtils.negativeTax(zaklDan1);
-                        dan1 = TaxUtils.negativeTax(dan1);
-                        zaklDan2 = TaxUtils.negativeTax(zaklDan2);
-                        dan2 = TaxUtils.negativeTax(dan2);
-                        price *= -1;
-                        priceFormat = PriceUtils.negativePrice(priceFormat);
-                    }
-                    billId = saveBill(billNumber, dateTime, returnMoneyLabel.getText(), priceFormat, namePerson, payTextField.getText(), fik, bkp, pkp, porad_cis, zaklDan1, dan1, zaklDan2, dan2);
-                    salesService.saveSale(billId, data);
-                    salesService.addTodayPrice(priceFormat);
-                    if (printer.equals("1")) {
-                        PrinterForm printerForm = new PrinterFormImpl(billNumber, data, printerDateFormat, fik, bkp, pkp, priceFormat, payLabel.getText(), returnMoneyLabel.getText(), zaklDan2, dan2, zaklDan1, dan1);
-                        printerForm.printBillWithTax();
-                    }
-                    informationAboutPay();
-                } else {
-                    billId = saveBill(billNumber, dateTime, returnMoneyLabel.getText(), priceFormat, namePerson, payTextField.getText(), fik, bkp, pkp, porad_cis, "0.00", "0.00", "0.00", "0.00");
-                    salesService.saveSale(billId, data);
-                    salesService.addTodayPrice(priceFormat);
-                    if (printer.equals("1")) {
-                        PrinterForm printerForm = new PrinterFormImpl(billNumber, data, printerDateFormat, fik, bkp, pkp, priceFormat, payLabel.getText(), returnMoneyLabel.getText(), "", "", "", "");
-                        printerForm.printBillWithoutTax();
-                    }
-                    informationAboutPay();
-                }
-            } else {
-                int porad_cis = billService.getPoradCisel();
-                porad_cis++;
-                Date dateTime = new Date();
-                double price = PriceUtils.totalPrice(data);
-                String priceFormat = DateUtils.format(price);
-                String printerDateFormat = DateUtils.billDateFormat(dateTime);
-                if (configManager.getTax().equals("1")) {
-                    salesDetail = TaxUtils.taxProduct(data);
-                    String zaklDan1 = salesDetail.getZakl_dan1();
-                    String dan1 = salesDetail.getDan1();
-                    String zaklDan2 = salesDetail.getZakl_dan2();
-                    String dan2 = salesDetail.getDan2();
-                    if (REFUNDANCE) {
-                        zaklDan1 = TaxUtils.negativeTax(zaklDan1);
-                        dan1 = TaxUtils.negativeTax(dan1);
-                        zaklDan2 = TaxUtils.negativeTax(zaklDan2);
-                        dan2 = TaxUtils.negativeTax(dan2);
-                        price *= -1;
-                        priceFormat = PriceUtils.negativePrice(priceFormat);
-                    }
-                    billId = saveBill(billNumber, dateTime, returnMoneyLabel.getText(), priceFormat, namePerson, payTextField.getText(), "", "", "", porad_cis, zaklDan1, dan1, zaklDan2, dan2);
-                    salesService.saveSale(billId, data);
-                    salesService.addTodayPrice(priceFormat);
-                    if (printer.equals("1")) {
-                        PrinterForm printerForm = new PrinterFormImpl(billNumber, data, printerDateFormat, "", "", "", priceFormat, payLabel.getText(), returnMoneyLabel.getText(), zaklDan2, dan2, zaklDan1, dan1);
-                        printerForm.printBillWithTax();
-                    }
-                    informationAboutPay();
-                } else {
-                    billId = saveBill(billNumber, dateTime, returnMoneyLabel.getText(), priceFormat, namePerson, payTextField.getText(), "", "", "", porad_cis, "0.00", "0.00", "0.00", "0.00");
-                    salesService.saveSale(billId, data);
-                    salesService.addTodayPrice(priceFormat);
-                    if (printer.equals("1")) {
-                        PrinterForm printerForm = new PrinterFormImpl(billNumber, data, printerDateFormat, "", "", "", priceFormat, payLabel.getText(), returnMoneyLabel.getText(), "", "", "", "");
-                        printerForm.printBillWithoutTax();
-                    }
-                    informationAboutPay();
-                }
-            }
+        if (data.isEmpty()) {
+            return;
         }
 
+        String billNumber = DateUtils.getBillId();
+        Date transactionTime = new Date();
+        int sequenceNumber = billService.getPoradCisel() + 1;
+        boolean taxEnabled = CONFIG_ENABLED.equals(configManager.getTax());
+        TaxAmounts taxAmounts = taxEnabled ? calculateTaxAmounts() : TaxAmounts.zero();
+        String totalPrice = formattedTotalPrice();
+
+        int billId = persistBill(billNumber, transactionTime, sequenceNumber, totalPrice, taxAmounts);
+        salesService.saveSale(billId, data);
+        salesService.addTodayPrice(totalPrice);
+        printBillIfEnabled(billNumber, transactionTime, totalPrice, taxAmounts, taxEnabled);
+        informationAboutPay();
+    }
+
+    private TaxAmounts calculateTaxAmounts() {
+        SalesDetail detail = TaxUtils.taxProduct(data);
+        TaxAmounts amounts = new TaxAmounts(
+                detail.getZakl_dan1(),
+                detail.getDan1(),
+                detail.getZakl_dan2(),
+                detail.getDan2()
+        );
+        return refundActive ? amounts.negated() : amounts;
+    }
+
+    private String formattedTotalPrice() {
+        String totalPrice = DateUtils.format(PriceUtils.totalPrice(data));
+        return refundActive ? PriceUtils.negativePrice(totalPrice) : totalPrice;
+    }
+
+    private int persistBill(String billNumber, Date transactionTime, int sequenceNumber,
+                            String totalPrice, TaxAmounts taxAmounts) {
+        int billId = billService.createBill(
+                billNumber,
+                transactionTime,
+                returnMoneyLabel.getText(),
+                totalPrice,
+                configManager.getLogin(),
+                payTextField.getText(),
+                "",
+                "",
+                "",
+                sequenceNumber,
+                taxAmounts.tax21(),
+                taxAmounts.base21(),
+                taxAmounts.tax12(),
+                taxAmounts.base12(),
+                payByCard
+        );
+        enqueueEetIfEnabled(billId, sequenceNumber, transactionTime, totalPrice);
+        return billId;
+    }
+
+    private void enqueueEetIfEnabled(int billId, int sequenceNumber, Date transactionTime, String totalPrice) {
+        if (billId <= 0 || !CONFIG_ENABLED.equals(configManager.getEet())) {
+            return;
+        }
+        eetSubmissionService.enqueue(
+                billId,
+                Integer.toString(sequenceNumber),
+                transactionTime.toInstant().atZone(ZoneId.systemDefault()).toOffsetDateTime().withNano(0),
+                new BigDecimal(totalPrice)
+        ).ifPresentOrElse(
+                ignored -> { },
+                () -> flashMessage.setText("Účtenka byla uložena, ale chybí konfigurace EET")
+        );
+    }
+
+    private void printBillIfEnabled(String billNumber, Date transactionTime, String totalPrice,
+                                    TaxAmounts taxAmounts, boolean taxEnabled) {
+        if (!CONFIG_ENABLED.equals(configManager.getPrinter())) {
+            return;
+        }
+
+        PrinterForm receipt = new PrinterFormImpl(
+                billNumber,
+                data,
+                DateUtils.billDateFormat(transactionTime),
+                "",
+                "",
+                "",
+                totalPrice,
+                payLabel.getText(),
+                returnMoneyLabel.getText(),
+                taxEnabled ? taxAmounts.base12() : "",
+                taxEnabled ? taxAmounts.tax12() : "",
+                taxEnabled ? taxAmounts.base21() : "",
+                taxEnabled ? taxAmounts.tax21() : ""
+        );
+        if (taxEnabled) {
+            receipt.printBillWithTax();
+        } else {
+            receipt.printBillWithoutTax();
+        }
     }
 
     private void informationAboutPay() {
-        REFUNDANCE = false;
-        PAY_BY_CARD = false;
+        refundActive = false;
+        payByCard = false;
         setActiveStyle(redundanceButton, "refund-active", false);
         setActiveStyle(payCardButton, "card-active", false);
         AlertDialogUtils.getInformationWithTime("Platba", "Probíha zprácování platby", "Prosím vyčkejte ....", 1000);
@@ -717,12 +724,8 @@ public class CashDeskController implements Initializable, ControlledScreen {
 
     @FXML
     public void redundance() {
-        if (!REFUNDANCE) {
-            REFUNDANCE = true;
-        } else {
-            REFUNDANCE = false;
-        }
-        setActiveStyle(redundanceButton, "refund-active", REFUNDANCE);
+        refundActive = !refundActive;
+        setActiveStyle(redundanceButton, "refund-active", refundActive);
     }
 
     @FXML
@@ -733,12 +736,8 @@ public class CashDeskController implements Initializable, ControlledScreen {
 
     @FXML
     public void payCard() {
-        if (!PAY_BY_CARD) {
-            PAY_BY_CARD = true;
-        } else {
-            PAY_BY_CARD = false;
-        }
-        setActiveStyle(payCardButton, "card-active", PAY_BY_CARD);
+        payByCard = !payByCard;
+        setActiveStyle(payCardButton, "card-active", payByCard);
         barcodeTextField.requestFocus();
     }
 
@@ -756,20 +755,18 @@ public class CashDeskController implements Initializable, ControlledScreen {
         }
     }
 
-    private int saveBill(String numberBill, Date date, String returnMoney, String totalPrice, String person, String acceptMoney, String FIK, String BKP, String PKP, int poradCis, String dan1, String zaklDan1, String dan2, String zaklDan2) {
-        int billId = billService.createBill(numberBill, date, returnMoney, totalPrice, person, acceptMoney,
-                FIK, BKP, PKP, poradCis, zaklDan1, dan1, zaklDan2, dan2, PAY_BY_CARD);
-        if (billId > 0 && "1".equals(configManager.getEet())) {
-            eetSubmissionService.enqueue(
-                    billId,
-                    Integer.toString(poradCis),
-                    date.toInstant().atZone(ZoneId.systemDefault()).toOffsetDateTime().withNano(0),
-                    new BigDecimal(totalPrice)
-            ).ifPresentOrElse(
-                    ignored -> { },
-                    () -> flashMessage.setText("Účtenka byla uložena, ale chybí konfigurace EET")
+    private record TaxAmounts(String base21, String tax21, String base12, String tax12) {
+        private static TaxAmounts zero() {
+            return new TaxAmounts(ZERO_AMOUNT, ZERO_AMOUNT, ZERO_AMOUNT, ZERO_AMOUNT);
+        }
+
+        private TaxAmounts negated() {
+            return new TaxAmounts(
+                    TaxUtils.negativeTax(base21),
+                    TaxUtils.negativeTax(tax21),
+                    TaxUtils.negativeTax(base12),
+                    TaxUtils.negativeTax(tax12)
             );
         }
-        return billId;
     }
 }

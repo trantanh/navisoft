@@ -3,7 +3,6 @@ package com.trantanh.navipos.service.impl;
 import com.trantanh.eet.v2.EetSubmissionService;
 import com.trantanh.navipos.config.SpringContext;
 import com.trantanh.eet.table.Eet;
-import com.trantanh.navipos.config.ConfigManager;
 import com.trantanh.navipos.dao.BillDao;
 import com.trantanh.navipos.dao.impl.BillDaoImpl;
 import com.trantanh.navipos.dto.BillDTO;
@@ -16,15 +15,23 @@ import javafx.collections.ObservableList;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Tran Tuan Anh, tran.t.anh@email.cz
  */
 public class BillServiceImpl implements BillService {
     private static BillServiceImpl instance = null;
-    private ConfigManager configManager = new ConfigManager();
-    private BillDao billDao = new BillDaoImpl();
-    ;
+    private final BillDao billDao;
+
+    private BillServiceImpl() {
+        this(new BillDaoImpl());
+    }
+
+    BillServiceImpl(BillDao billDao) {
+        this.billDao = Objects.requireNonNull(billDao, "billDao");
+    }
+
     public static BillServiceImpl getInstance() {
         if (instance == null) {
             BillServiceImpl.instance = new BillServiceImpl();
@@ -94,7 +101,7 @@ public class BillServiceImpl implements BillService {
     @Override
     public ObservableList<Eet> getCurrentBillOfflineList() {
         ObservableList<Eet> eets = FXCollections.observableArrayList();
-        eets.addAll(getCurrentBillOfflineList());
+        eets.addAll(billDao.getCurrentBillOfflineList());
         return eets;
     }
 
@@ -136,8 +143,8 @@ public class BillServiceImpl implements BillService {
         SpringContext.getBean(EetSubmissionService.class).retryReady();
     }
 
-    public void updateFik(String fik, String billNumber) {
-        if (!fik.isEmpty() && fik != null) {
+    public void updateFik(String billNumber, String fik) {
+        if (fik != null && !fik.isEmpty()) {
             billDao.updateFik(billNumber, fik);
         }
     }
