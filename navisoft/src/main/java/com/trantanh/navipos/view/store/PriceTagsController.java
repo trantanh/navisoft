@@ -6,17 +6,18 @@ import com.trantanh.navipos.service.ProductService;
 import com.trantanh.navipos.service.impl.PrinterServiceImpl;
 import com.trantanh.navipos.service.impl.ProductServiceImpl;
 import com.trantanh.navipos.utils.AlertDialogUtils;
-import com.trantanh.navipos.utils.DateUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * FXML Controller class
@@ -25,7 +26,8 @@ import java.util.ResourceBundle;
  */
 public class PriceTagsController implements Initializable {
 
-    private final Logger logger = LoggerFactory.getLogger(PriceTagsController.class);
+    private static final Pattern UNIT_PATTERN = Pattern.compile("^\\s*(\\d+(?:[.,]\\d+)?)\\s*([\\p{L}]+)\\s*$");
+
     @FXML
     private TextField barcodeTextField;
 
@@ -72,22 +74,39 @@ public class PriceTagsController implements Initializable {
 
     @FXML
     public void printPriceTags() {
-        if (barcodeTextField.getText().equals("") || priceTextField.getText().equals("") || unitTextField.getText().equals("")) {
-            AlertDialogUtils.getWarning("Informace", "Prazdné pole", "Pole jsou prazdné");
+        String barcode = barcodeTextField.getText().trim();
+        String name = nameTextField.getText().trim();
+        String price = priceTextField.getText().trim();
+        String unit = unitTextField.getText().trim();
+        if (barcode.isEmpty() || name.isEmpty() || price.isEmpty() || unit.isEmpty()) {
+            AlertDialogUtils.getWarning("Informace", "Prázdné pole", "Vyplňte čárový kód, název, cenu a jednotku.");
             barcodeTextField.requestFocus();
+            return;
         }
-        String name = nameTextField.getText();
-        String price = priceTextField.getText();
-        String unit = unitTextField.getText();
-        String unitCount = getUnit(unitTextField.getText(), priceTextField.getText());
-        printerService = new PrinterServiceImpl();
 
-        if(barcodeCheckBox.isSelected()){
-            printerService.printPriceTagWithBarcode(name, price + "KČ", unit, unitCount + " KČ", barcodeTextField.getText());
-        }else {
-            printerService.printPriceTag(name, price + "KČ", unit, unitCount + " KČ");
+        String unitCount;
+        try {
+            BigDecimal numericPrice = new BigDecimal(price.replace(',', '.'));
+            if (numericPrice.signum() < 0) {
+                throw new NumberFormatException("Cena musí být nezáporné číslo");
+            }
+            unitCount = getUnit(unit, price.replace(',', '.'));
+        } catch (NumberFormatException exception) {
+            AlertDialogUtils.getWarning("Neplatná data", "Zkontrolujte cenu a jednotku", "Cena nebo množství v jednotce nemá platný číselný formát.");
+            priceTextField.requestFocus();
+            return;
         }
-        productService.updateUnit(unitTextField.getText(), barcodeTextField.getText());
+
+        printerService = new PrinterServiceImpl();
+        boolean printed = barcodeCheckBox.isSelected()
+                ? printerService.printPriceTagWithBarcode(name, price + "KČ", unit, unitCount + " KČ", barcode)
+                : printerService.printPriceTag(name, price + "KČ", unit, unitCount + " KČ");
+        if (!printed) {
+            AlertDialogUtils.getError("Tisk cenovky selhal", "Tiskárna není dostupná", "Zkontrolujte výchozí tiskárnu a zkuste tisk znovu.");
+            return;
+        }
+
+        productService.updateUnit(unit, barcode);
         barcodeTextField.setVisible(true);
         barcodeTextField.clear();
         unitTextField.clear();
@@ -98,26 +117,34 @@ public class PriceTagsController implements Initializable {
 
 
     private String getUnit(String value, String price) {
-        String unit = value.replaceAll("\\d", "");
-        String number = value.replaceAll("\\D+", "");
-        double priceOfProduct = Double.valueOf(price);
-        double unitOfProduct = Double.valueOf(number);
+        Matcher matcher = UNIT_PATTERN.matcher(value);
+        if (!matcher.matches()) {
+            return "bez jednotek";
+        }
+
+        BigDecimal unitOfProduct = new BigDecimal(matcher.group(1).replace(',', '.'));
+        if (unitOfProduct.signum() <= 0) {
+            throw new NumberFormatException("Množství jednotky musí být větší než nula");
+        }
+        String unit = matcher.group(2);
+        BigDecimal priceOfProduct = new BigDecimal(price);
         String result;
         switch (unit.toLowerCase()) {
             case "l":
-                result = "1l = " + DateUtils.format(countUnit(priceOfProduct, unitOfProduct, 1));
+                result = "1l = " + countUnit(priceOfProduct, unitOfProduct, 1);
                 break;
             case "ml":
-                result = "100ml = " + DateUtils.format(countUnit(priceOfProduct, unitOfProduct, 100));
+                result = "100ml = " + countUnit(priceOfProduct, unitOfProduct, 100);
                 break;
             case "kg":
-                result = "1kg =" + DateUtils.format(countUnit(priceOfProduct, unitOfProduct, 100));
+                result = "1kg =" + countUnit(priceOfProduct, unitOfProduct, 100);
                 break;
             case "g":
-                result = "100g =" + DateUtils.format(countUnit(priceOfProduct, unitOfProduct, 100));
+                result = "100g =" + countUnit(priceOfProduct, unitOfProduct, 100);
                 break;
             case "ks":
-                result = "1ks = " + DateUtils.format(countUnit(priceOfProduct, unitOfProduct, 1));
+                result = "1ks = " + countUnit(priceOfProduct, unitOfProduct, 1);
+                break;
             default:
                 result = "bez jednotek";
                 break;
@@ -125,7 +152,9 @@ public class PriceTagsController implements Initializable {
         return result;
     }
 
-    private double countUnit(double priceOfProduct, double unitOfProduct, double number) {
-        return priceOfProduct / (unitOfProduct / number);
+    private String countUnit(BigDecimal priceOfProduct, BigDecimal unitOfProduct, int number) {
+        return priceOfProduct.multiply(BigDecimal.valueOf(number))
+                .divide(unitOfProduct, 2, RoundingMode.HALF_UP)
+                .toPlainString();
     }
 }
