@@ -27,12 +27,25 @@
 - Neměň veřejné API, databázové schéma ani formát uložených dat bez vyhodnocení migrace a zpětné kompatibility.
 - Nikdy nezapisuj hesla, certifikáty, přístupové údaje ani citlivá data do zdrojového kódu nebo logů.
 
+## EET 2.0
+
+- Aktivní implementace EET je v balíčku `com.trantanh.eet.v2` a používá SOAP schéma v4. Kód v `com.trantanh.eet.impl` a `openeet.lite` považuj za legacy; nerozšiřuj jej pro nové funkce.
+- EET 2.0 vrací POK. Neobnovuj původní tok založený na FIK, BKP, PKP nebo rozpisu DPH, pokud to výslovně nevyžaduje aktuální oficiální specifikace.
+- Odesílání tržby nesmí blokovat uložení ani tisk účtenky. Používej databázovou frontu `eet_submission`, stavový automat a asynchronní odeslání přes `EetSubmissionService`.
+- Zachovej idempotenci vůči účtence a atomické převzetí záznamu ke zpracování. Dočasné síťové a serverové chyby opakuj; neplatná lokální data a trvalé odmítnutí serverem označ jako `REJECTED`.
+- Podepisuj SOAP zprávu certifikátem PKCS#12 a kryptograficky ověřuj podpis potvrzení. XML parsery musí zakazovat DTD, externí entity a externí schémata.
+- Certifikát a heslo načítej přednostně z `NAVISOFT_EET_CERTIFICATE_PATH` a `NAVISOFT_EET_CERTIFICATE_PASSWORD`. Databázová legacy konfigurace je pouze zpětně kompatibilní záloha; nové tajné údaje do databáze neukládej.
+- Playground je bezpečné výchozí prostředí. Produkční endpoint nepoužívej v testech a nepřepínej na něj bez explicitní konfigurace.
+- Změny databázového modelu EET prováděj verzovanou Flyway migrací. Zachovej čitelnost existujících účtenek a legacy sloupců, dokud nebude připravena samostatná migrace.
+- Před změnou protokolu, endpointů, časových limitů nebo povinných polí ověř aktuální oficiální dokumentaci; právní a technická pravidla EET se mohou změnit.
+
 ## Ověření změn
 
 - Ke změně chování přidej nebo uprav odpovídající testy, pokud je to prakticky možné.
 - Spusť nejmenší relevantní Gradle test nejprve; před dokončením spusť širší testy dotčeného modulu.
 - U změn JavaFX ověř vazby controller/FXML a názvy `fx:id` a handlerů.
 - U databázových změn ověř transakce, práci s `null`, mapování entit a kompatibilitu se stávajícími daty.
+- U EET změn spusť jednotkové testy podpisu a parsování, test databázové fronty a celý `./gradlew test`. Živý test Playgroundu spouštěj pouze s veřejným testovacím certifikátem přes proměnnou `EET_PLAYGROUND_CERTIFICATE`; test nesmí obsahovat certifikát ani heslo v repozitáři.
 - Pokud test nebo sestavení nelze spustit, přesně uveď důvod a co zůstalo neověřené.
 
 ## Výstup

@@ -373,7 +373,12 @@ public class BillDaoImpl extends DatabaseConnector implements BillDao {
     public List<Eet> getCurrentBillOfflineList() {
         List<Eet> data = new ArrayList<>();
         try {
-            String query = "SELECT * FROM bills WHERE  `FIK`IS NULL";
+            String query = """
+                    SELECT b.*, COALESCE(es.status, 'LEGACY') AS eet_status
+                      FROM bills b
+                      JOIN eet_submission es ON es.bill_id = b.id
+                     WHERE es.status IN ('PENDING', 'SENDING', 'RETRY', 'REJECTED')
+                    """;
             preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -381,7 +386,14 @@ public class BillDaoImpl extends DatabaseConnector implements BillDao {
                 int id = rs.getInt("id");
                 String numberbill = rs.getString("numberbill");
                 Timestamp created = rs.getTimestamp("created");
-                Eet eet = new Eet(id, numberbill, DateUtils.formatDate(created), DateUtils.formatTime(created));
+                String status = switch (rs.getString("eet_status")) {
+                    case "PENDING" -> "Čeká";
+                    case "SENDING" -> "Odesílá se";
+                    case "RETRY" -> "Opakování";
+                    case "REJECTED" -> "Odmítnuto";
+                    default -> "Legacy";
+                };
+                Eet eet = new Eet(id, numberbill, DateUtils.formatDate(created), DateUtils.formatTime(created), status);
                 data.add(eet);
             }
             return data;
@@ -412,7 +424,11 @@ public class BillDaoImpl extends DatabaseConnector implements BillDao {
     @Override
     public List<Integer> listId() {
         try {
-            String query = "SELECT id FROM `bills` WHERE `FIK`IS NULL";
+            String query = """
+                    SELECT b.id FROM bills b
+                    JOIN eet_submission es ON es.bill_id = b.id
+                    WHERE es.status IN ('PENDING', 'SENDING', 'RETRY', 'REJECTED')
+                    """;
             List<Integer> listId = new ArrayList<>();
             preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
@@ -471,7 +487,7 @@ public class BillDaoImpl extends DatabaseConnector implements BillDao {
     public List<BillModel> getOfflineBill() {
         Date date = new Date();
         List<BillModel> billModels = new ArrayList<>();
-        String query = "SELECT * FROM `bills` WHERE `FIK`IS NULL OR  FIK = '' AND `date`=? ";
+        String query = "SELECT * FROM `bills` WHERE (`FIK` IS NULL OR `FIK` = '') AND `date` = ?";
         try {
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, SIMPLE_DATE_FORMAT.format(date));

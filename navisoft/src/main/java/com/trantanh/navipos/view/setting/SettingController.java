@@ -236,10 +236,10 @@ public class SettingController implements Initializable, ControlledScreen {
             typeButton.setText(PLAYGROUND);
         }
         if (confing.getEet().equals("1")) {
-            eetButton.setText("EET 2");
+            eetButton.setText("EET zapnuta");
             eetButton.setStyle("-fx-background-color:red");
         } else {
-            eetButton.setText("EET 1");
+            eetButton.setText("EET vypnuta");
             eetButton.setStyle("");
         }
         if (confing.getPrinter().equals("1")) {
@@ -393,12 +393,12 @@ public class SettingController implements Initializable, ControlledScreen {
 
     @FXML
     public void eetButton() {
-        if (eetButton.getText().equals("EET 1")) {
-            eetButton.setText("EET 2");
+        if (eetButton.getText().equals("EET vypnuta")) {
+            eetButton.setText("EET zapnuta");
             eetButton.setStyle("-fx-background-color:red");
             confing.setEet("1");
         } else {
-            eetButton.setText("EET 1");
+            eetButton.setText("EET vypnuta");
             eetButton.setStyle("");
             confing.setEet("0");
         }

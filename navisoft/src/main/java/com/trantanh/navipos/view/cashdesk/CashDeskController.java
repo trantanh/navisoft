@@ -2,6 +2,8 @@ package com.trantanh.navipos.view.cashdesk;
 
 import com.trantanh.navipos.config.SpringContext;
 
+import com.trantanh.eet.v2.EetSubmissionService;
+
 import com.trantanh.navipos.ControlledScreen;
 import com.trantanh.navipos.ScreensController;
 import com.trantanh.navipos.config.ConfigManager;
@@ -33,7 +35,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -145,7 +149,7 @@ public class CashDeskController implements Initializable, ControlledScreen {
     private static boolean REFUNDANCE = false;
     private static boolean PAY_BY_CARD = false;
 
-    private EetService eetService;
+    private EetSubmissionService eetSubmissionService;
 
     private ConfigManager configManager;
 
@@ -181,6 +185,7 @@ public class CashDeskController implements Initializable, ControlledScreen {
     public void initialize(URL url, ResourceBundle rb) {
         billService = BillServiceImpl.getInstance();
         salesService = SalesServiceImpl.getInstance();
+        eetSubmissionService = SpringContext.getBean(EetSubmissionService.class);
         payTextField.setVisible(false);
         configManager = new ConfigManager();
         valueFVTextField.setVisible(false);
@@ -724,6 +729,19 @@ public class CashDeskController implements Initializable, ControlledScreen {
     }
 
     private int saveBill(String numberBill, Date date, String returnMoney, String totalPrice, String person, String acceptMoney, String FIK, String BKP, String PKP, int poradCis, String dan1, String zaklDan1, String dan2, String zaklDan2) {
-        return billService.createBill(numberBill, date, returnMoney, totalPrice, person, acceptMoney, FIK, BKP, PKP, poradCis, zaklDan1, dan1, zaklDan2, dan2, PAY_BY_CARD);
+        int billId = billService.createBill(numberBill, date, returnMoney, totalPrice, person, acceptMoney,
+                FIK, BKP, PKP, poradCis, zaklDan1, dan1, zaklDan2, dan2, PAY_BY_CARD);
+        if (billId > 0 && "1".equals(configManager.getEet())) {
+            eetSubmissionService.enqueue(
+                    billId,
+                    Integer.toString(poradCis),
+                    date.toInstant().atZone(ZoneId.systemDefault()).toOffsetDateTime().withNano(0),
+                    new BigDecimal(totalPrice)
+            ).ifPresentOrElse(
+                    ignored -> { },
+                    () -> flashMessage.setText("Účtenka byla uložena, ale chybí konfigurace EET")
+            );
+        }
+        return billId;
     }
 }

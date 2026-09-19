@@ -61,6 +61,7 @@ public class OfflineEET {
         eetTimeColumn.setCellValueFactory((TableColumn.CellDataFeatures<Eet, String> param) -> new ReadOnlyObjectWrapper(param.getValue().getTime()));
         eetNumberColumn.setCellValueFactory((TableColumn.CellDataFeatures<Eet, String> param) -> new ReadOnlyObjectWrapper(param.getValue().getNumberBill()));
         eetDateColumn.setCellValueFactory((TableColumn.CellDataFeatures<Eet, String> param) -> new ReadOnlyObjectWrapper(param.getValue().getDate()));
+        sendColumn.setCellValueFactory((TableColumn.CellDataFeatures<Eet, String> param) -> new ReadOnlyObjectWrapper(param.getValue().getStatus()));
         eetTable.setItems(data);
         
         eetTable.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {

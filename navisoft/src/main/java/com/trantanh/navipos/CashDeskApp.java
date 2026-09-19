@@ -17,7 +17,7 @@ import java.util.Locale;
 /**
  * @author Tran Tuan Anh, tran.t.anh@email.cz
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.trantanh")
 public class CashDeskApp extends Application {
 
     private static final Logger logger = LoggerFactory.getLogger(CashDeskApp.class);

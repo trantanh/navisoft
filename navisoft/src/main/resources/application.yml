@@ -23,7 +23,7 @@ spring:
         jdbc:
           time_zone: Europe/Prague
   flyway:
-    enabled: ${NAVISOFT_FLYWAY_ENABLED:false}
+    enabled: ${NAVISOFT_FLYWAY_ENABLED:true}
     baseline-on-migrate: true
     baseline-version: 0
 
@@ -35,3 +35,11 @@ logging:
 navisoft:
   cash-desk:
     pin: ${NAVISOFT_CASHDESK_PIN:}
+  eet:
+    # Empty value keeps the environment selected in Nastavení; an environment
+    # variable can lock deployments to playground or production.
+    environment: ${NAVISOFT_EET_ENVIRONMENT:}
+    certificate-path: ${NAVISOFT_EET_CERTIFICATE_PATH:}
+    certificate-password: ${NAVISOFT_EET_CERTIFICATE_PASSWORD:}
+    connect-timeout: ${NAVISOFT_EET_CONNECT_TIMEOUT:2s}
+    response-timeout: ${NAVISOFT_EET_RESPONSE_TIMEOUT:2s}

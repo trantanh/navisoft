@@ -36,7 +36,7 @@
                             <TableColumn fx:id="eetNumberColumn" prefWidth="202.0" text="Číslo účtenky" />
                               <TableColumn fx:id="eetDateColumn" prefWidth="99.0" text="Datum" />
                               <TableColumn fx:id="eetTimeColumn" prefWidth="114.0" text="Čas" />
-                              <TableColumn fx:id="sendColumn" prefWidth="119.0" text="Odeslat" />
+                              <TableColumn fx:id="sendColumn" prefWidth="119.0" text="Stav EET" />
                           </columns>
                         </TableView>
                      </children>

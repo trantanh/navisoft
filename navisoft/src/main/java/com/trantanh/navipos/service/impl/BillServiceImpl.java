@@ -1,6 +1,7 @@
 package com.trantanh.navipos.service.impl;
 
-import com.trantanh.eet.impl.EETClient;
+import com.trantanh.eet.v2.EetSubmissionService;
+import com.trantanh.navipos.config.SpringContext;
 import com.trantanh.eet.table.Eet;
 import com.trantanh.navipos.config.ConfigManager;
 import com.trantanh.navipos.dao.BillDao;
@@ -24,8 +25,6 @@ public class BillServiceImpl implements BillService {
     private ConfigManager configManager = new ConfigManager();
     private BillDao billDao = new BillDaoImpl();
     ;
-    private EETClient eetClient;
-
     public static BillServiceImpl getInstance() {
         if (instance == null) {
             BillServiceImpl.instance = new BillServiceImpl();
@@ -134,18 +133,7 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public void sendOfflineData() {
-        List<BillModel> billModels = billDao.getOfflineBill();
-        for (BillModel billModel : billModels) {
-            Date date = new Date(billModel.getCreated().getTime());
-            if (configManager.getTax().equals("1")) {
-                eetClient = new EETClient(Double.valueOf(billModel.getTotalPrice()), date, billModel.getPorad_cis(), billModel.getZakl_dan1(), billModel.getDan1(), billModel.getZakl_dan2(), billModel.getDan2());
-            } else {
-                eetClient = new EETClient(Double.valueOf(billModel.getTotalPrice()), billModel.getPorad_cis(), date);
-            }
-            eetClient.data();
-            String fik = eetClient.getFik();
-            updateFik(fik, billModel.getNumberBill());
-        }
+        SpringContext.getBean(EetSubmissionService.class).retryReady();
     }
 
     public void updateFik(String fik, String billNumber) {

@@ -158,7 +158,7 @@
                                           <Label alignment="CENTER" prefHeight="39.0" prefWidth="368.0" text="Prostředí EET" GridPane.rowIndex="10" />
                                           <Label alignment="CENTER" prefHeight="39.0" prefWidth="360.0" text="Pořadi číslo účtenek" GridPane.rowIndex="9" />
                                           <TextField fx:id="porad_cisTextField" prefHeight="53.0" prefWidth="345.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                                          <Button fx:id="eetButton" mnemonicParsing="false" onAction="#eetButton" prefHeight="35.0" prefWidth="497.0" text="EET 2" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                          <Button fx:id="eetButton" mnemonicParsing="false" onAction="#eetButton" prefHeight="35.0" prefWidth="497.0" text="EET vypnuta" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                                           <Button fx:id="typeButton" mnemonicParsing="false" onAction="#typeButton" prefHeight="35.0" prefWidth="465.0" text="PRODUCTION" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                                        </children>
                                        <padding>

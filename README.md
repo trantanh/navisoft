@@ -11,7 +11,7 @@ jeden Gradle modul `navisoft`.
 - JavaFX 25.0.4
 - Spring Data JPA, Hibernate a HikariCP
 - MySQL Connector/J
-- Flyway připravený pro řízené databázové migrace
+- Flyway pro řízené databázové migrace
 
 ## Databáze
 
@@ -27,12 +27,34 @@ export NAVISOFT_CASHDESK_PIN='change-me'
 
 Příklad je v `.env.example`. Soubor `.env` se neukládá do Gitu.
 
-Flyway je zatím ve výchozím stavu vypnutý. Zapněte jej až po vytvoření a ověření
-baseline existující produkční databáze:
+Flyway je ve výchozím stavu zapnutý. U existující databáze vytvoří baseline a
+aplikuje migraci fronty EET 2.0. Databázový uživatel proto musí mít při prvním
+spuštění oprávnění vytvořit tabulku a index:
 
 ```shell
 export NAVISOFT_FLYWAY_ENABLED=true
 ```
+
+## EET 2.0
+
+EET se zapíná v nastavení aplikace. Odeslání probíhá asynchronně a neblokuje
+uložení ani tisk účtenky. Neúspěšná odeslání jsou uložena v databázové frontě a
+aplikace je automaticky opakuje. Výchozím prostředím je Playground; produkční
+prostředí zapněte až s platným produkčním certifikátem.
+
+Certifikát a heslo je doporučeno předat přes prostředí, aby heslo nemuselo být
+uloženo v databázi:
+
+```shell
+export NAVISOFT_EET_ENVIRONMENT=playground
+export NAVISOFT_EET_CERTIFICATE_PATH=/bezpecna/cesta/certifikat.p12
+export NAVISOFT_EET_CERTIFICATE_PASSWORD='change-me'
+```
+
+Povolené hodnoty `NAVISOFT_EET_ENVIRONMENT` jsou `playground` a `production`.
+Pokud proměnná není nastavena, použije se volba prostředí z UI. Staré nastavení
+certifikátu v databázi zůstává kvůli zpětné kompatibilitě podporované jako
+záložní varianta.
 
 ## Sestavení a testy
 
